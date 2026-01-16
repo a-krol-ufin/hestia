@@ -1,54 +1,44 @@
-# hestia
+# Hestia
 
-This template should help get you started developing with Vue 3 in Vite.
+Hestia is a comprehensive home management application designed to streamline daily household tasks. It currently facilitates shopping list management, budget planning, and payment reminders, with an extensible architecture intended to support a wide range of future functionalities.
 
-## Recommended IDE Setup
+## Technology Stack
 
-[VS Code](https://code.visualstudio.com/) + [Vue (Official)](https://marketplace.visualstudio.com/items?itemName=Vue.volar) (and disable Vetur).
+The application utilizes a modern, performance-oriented technology stack:
 
-## Recommended Browser Setup
+- **Frontend**: Vue.js (Self-hosted)
+- **Backend**: PocketBase (Self-hosted)
 
-- Chromium-based browsers (Chrome, Edge, Brave, etc.):
-  - [Vue.js devtools](https://chromewebstore.google.com/detail/vuejs-devtools/nhdogjmejiglipccpnnnanhbledajbpd)
-  - [Turn on Custom Object Formatter in Chrome DevTools](http://bit.ly/object-formatters)
-- Firefox:
-  - [Vue.js devtools](https://addons.mozilla.org/en-US/firefox/addon/vue-js-devtools/)
-  - [Turn on Custom Object Formatter in Firefox DevTools](https://fxdx.dev/firefox-devtools-custom-object-formatters/)
+## Getting Started
 
-## Type Support for `.vue` Imports in TS
+This project is containerized using Docker to ensure consistent deployment environments.
 
-TypeScript cannot handle type information for `.vue` imports by default, so we replace the `tsc` CLI with `vue-tsc` for type checking. In editors, we need [Volar](https://marketplace.visualstudio.com/items?itemName=Vue.volar) to make the TypeScript language service aware of `.vue` types.
+### Prerequisites
 
-## Customize configuration
+- Docker
+- Docker Compose
 
-See [Vite Configuration Reference](https://vite.dev/config/).
+### Deployment
 
-## Project Setup
+1. Clone the repository to your local machine.
+2. Navigate to the project directory.
+3. Start the application services:
 
-```sh
-npm install
+```bash
+docker-compose up -d --build
 ```
 
-### Compile and Hot-Reload for Development
+### Accessing the Application
 
-```sh
-npm run dev
-```
+Once the services are running, the application components can be accessed at the following addresses:
 
-### Type-Check, Compile and Minify for Production
+- **Frontend Application**: http://localhost:8080
+- **PocketBase Admin UI**: http://localhost:8090/_/
 
-```sh
-npm run build
-```
+## Credits
 
-### Run Unit Tests with [Vitest](https://vitest.dev/)
+Developed by Antoni Krol BrightStack.
 
-```sh
-npm run test:unit
-```
+## License
 
-### Lint with [ESLint](https://eslint.org/)
-
-```sh
-npm run lint
-```
+This project is open source.
