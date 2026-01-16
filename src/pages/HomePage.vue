@@ -6,9 +6,9 @@ import Footer from '@/components/Footer.vue'
 </script>
 
 <template>
-  <div class="bg-orange-50 font-sans">
+  <div class="min-h-screen bg-orange-50 font-sans flex flex-col">
     <Navbar />
-    <main>
+    <main class="flex-grow">
       <Hero />
       <FeaturesSection />
     </main>

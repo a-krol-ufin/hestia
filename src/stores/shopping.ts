@@ -17,11 +17,30 @@ export const useShoppingStore = defineStore('shopping', () => {
 
   async function addItem(item: CreateShoppingItem) {
     error.value = null
-    const newItem = await shoppingService.addItem(item)
-    if (newItem) {
-      items.value.unshift(newItem)
+
+    const normalizedName = item.name.trim().toLowerCase()
+    const existingItem = items.value.find(
+      i => i.name.trim().toLowerCase() === normalizedName && !i.checked
+    )
+
+    if (existingItem) {
+      const newQuantity = existingItem.quantity + (item.quantity || 1)
+      const updated = await shoppingService.updateItem(existingItem.id, { quantity: newQuantity })
+      if (updated) {
+        const index = items.value.findIndex(i => i.id === existingItem.id)
+        if (index !== -1) {
+          items.value[index] = updated
+        }
+      } else {
+        error.value = 'Failed to update item quantity'
+      }
     } else {
-      error.value = 'Failed to add item'
+      const newItem = await shoppingService.addItem(item)
+      if (newItem) {
+        items.value.unshift(newItem)
+      } else {
+        error.value = 'Failed to add item'
+      }
     }
   }
 
