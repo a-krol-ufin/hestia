@@ -1,5 +1,5 @@
 migrate((app) => {
-  // Create households collection
+  // Create households collection first
   const households = new Collection({
     name: "households",
     type: "base",
@@ -34,6 +34,8 @@ migrate((app) => {
       },
     ],
   })
+
+  app.save(households)
 
   // Create budget_entries collection
   const budgetEntries = new Collection({
@@ -92,6 +94,8 @@ migrate((app) => {
     ],
   })
 
+  app.save(budgetEntries)
+
   // Create budget_plans collection
   const budgetPlans = new Collection({
     name: "budget_plans",
@@ -143,8 +147,6 @@ migrate((app) => {
     ],
   })
 
-  app.save(households)
-  app.save(budgetEntries)
   app.save(budgetPlans)
 }, (app) => {
   const budgetPlans = app.findCollectionByNameOrId("budget_plans")

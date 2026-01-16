@@ -19,9 +19,7 @@ class BudgetService {
   // Households
   async getHouseholds(): Promise<Household[]> {
     try {
-      const records = await pb.collection(this.householdsCollection).getFullList<Household>({
-        sort: '-created',
-      })
+      const records = await pb.collection(this.householdsCollection).getFullList<Household>()
       return records
     } catch (error) {
       console.error('Failed to fetch households:', error)
@@ -86,7 +84,7 @@ class BudgetService {
 
       const records = await pb.collection(this.entriesCollection).getFullList<BudgetEntry>({
         filter,
-        sort: '-date,-created',
+        sort: '-date',
       })
       return records
     } catch (error) {
@@ -139,7 +137,6 @@ class BudgetService {
 
       const records = await pb.collection(this.plansCollection).getFullList<BudgetPlan>({
         filter,
-        sort: '-created',
       })
       return records
     } catch (error) {

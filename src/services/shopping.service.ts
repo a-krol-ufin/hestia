@@ -6,9 +6,7 @@ class ShoppingService {
 
   async getItems(): Promise<ShoppingItem[]> {
     try {
-      const records = await pb.collection(this.collection).getFullList<ShoppingItem>({
-        sort: '-created',
-      })
+      const records = await pb.collection(this.collection).getFullList<ShoppingItem>()
       return records
     } catch (error) {
       console.error('Failed to fetch shopping items:', error)
