@@ -1,4 +1,4 @@
-migrate((db) => {
+migrate((app) => {
   const collection = new Collection({
     id: "pbc_shopping_items",
     name: "shopping_items",
@@ -73,13 +73,10 @@ migrate((db) => {
     deleteRule: '@request.auth.id != "" && user = @request.auth.id',
   });
 
-  // ZMIANA: Zamiast Dao(db).saveCollection używamy db.saveCollection
-  return db.saveCollection(collection);
+  return app.save(collection);
 
-}, (db) => {
-  // ZMIANA: Zamiast dao.find... używamy db.find...
-  const collection = db.findCollectionByNameOrId("pbc_shopping_items");
+}, (app) => {
+  const collection = app.findCollectionByNameOrId("pbc_shopping_items");
 
-  // ZMIANA: Zamiast dao.delete... używamy db.delete...
-  return db.deleteCollection(collection);
+  return app.delete(collection);
 });
