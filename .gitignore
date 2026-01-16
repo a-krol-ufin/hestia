@@ -23,7 +23,6 @@ coverage
 *.njsproj
 *.sln
 *.sw?
-
 *.tsbuildinfo
 
 .eslintcache
@@ -34,3 +33,5 @@ coverage
 
 # Vitest
 __screenshots__/
+pocketbase.exe
+pb_data/*
