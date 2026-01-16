@@ -1,5 +1,5 @@
-// Budget Categories
-export type BudgetCategory =
+// Expense Categories
+export type ExpenseCategory =
   | 'food'
   | 'bills'
   | 'transport'
@@ -8,6 +8,17 @@ export type BudgetCategory =
   | 'clothing'
   | 'education'
   | 'other'
+
+// Income Categories
+export type IncomeCategory =
+  | 'salary'
+  | 'freelance'
+  | 'bonus'
+  | 'investment'
+  | 'other'
+
+// Union of all categories
+export type BudgetCategory = ExpenseCategory | IncomeCategory
 
 export type EntryType = 'income' | 'expense'
 
@@ -61,11 +72,11 @@ export interface UpdateBudgetEntry {
   date?: string
 }
 
-// Budget Plan
+// Budget Plan (only for expenses)
 export interface BudgetPlan {
   id: string
   household: string
-  category: BudgetCategory
+  category: ExpenseCategory
   amount: number
   month: string // Format: YYYY-MM
   recurrent: boolean
@@ -75,14 +86,14 @@ export interface BudgetPlan {
 }
 
 export interface CreateBudgetPlan {
-  category: BudgetCategory
+  category: ExpenseCategory
   amount: number
   month: string
   recurrent: boolean
 }
 
 export interface UpdateBudgetPlan {
-  category?: BudgetCategory
+  category?: ExpenseCategory
   amount?: number
   month?: string
   recurrent?: boolean
@@ -100,6 +111,17 @@ export interface MonthlySummary {
   month: string
   totalIncome: number
   totalExpenses: number
+  totalPlanned: number
   balance: number
-  expensesByCategory: Record<BudgetCategory, number>
+  availableBalance: number
+  expensesByCategory: Record<ExpenseCategory, number>
+}
+
+// Category progress
+export interface CategoryProgress {
+  category: ExpenseCategory
+  planned: number
+  spent: number
+  remaining: number
+  percentage: number
 }

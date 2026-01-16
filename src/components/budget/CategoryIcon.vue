@@ -8,6 +8,10 @@ import {
   ShoppingCartIcon,
   AcademicCapIcon,
   EllipsisHorizontalCircleIcon,
+  BanknotesIcon,
+  BriefcaseIcon,
+  GiftIcon,
+  ChartBarIcon,
 } from '@heroicons/vue/24/outline'
 import type { BudgetCategory } from '@/types/budget.types'
 
@@ -20,7 +24,8 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
-const iconMap = {
+const iconMap: Record<BudgetCategory, any> = {
+  // Expense categories
   food: ShoppingBagIcon,
   bills: HomeIcon,
   transport: TruckIcon,
@@ -28,10 +33,17 @@ const iconMap = {
   health: HeartIcon,
   clothing: ShoppingCartIcon,
   education: AcademicCapIcon,
+  // Income categories
+  salary: BanknotesIcon,
+  freelance: BriefcaseIcon,
+  bonus: GiftIcon,
+  investment: ChartBarIcon,
+  // Other (shared)
   other: EllipsisHorizontalCircleIcon,
 }
 
-const colorMap = {
+const colorMap: Record<BudgetCategory, string> = {
+  // Expense categories (warm/neutral colors)
   food: 'text-orange-500',
   bills: 'text-blue-500',
   transport: 'text-green-500',
@@ -39,6 +51,12 @@ const colorMap = {
   health: 'text-red-500',
   clothing: 'text-pink-500',
   education: 'text-indigo-500',
+  // Income categories (shades of green)
+  salary: 'text-emerald-600',
+  freelance: 'text-teal-600',
+  bonus: 'text-lime-600',
+  investment: 'text-cyan-600',
+  // Other (shared)
   other: 'text-slate-500',
 }
 

@@ -120,7 +120,17 @@
     "createHouseholdDescription": "Zacznij od utworzenia gospodarstwa domowego, aby wspólnie zarządzać budżetem z rodziną.",
     "householdNamePlaceholder": "np. Rodzina Kowalskich",
     "createHouseholdButton": "Utwórz gospodarstwo",
-    "categories": {
+    "planned": "Zaplanowane",
+    "available": "Dostępne",
+    "spent": "Wydane",
+    "remaining": "Pozostało",
+    "over": "ponad budżet",
+    "budgetProgress": "Postęp budżetu",
+    "overBudget": "Przekroczono budżet!",
+    "underBudget": "W ramach budżetu",
+    "onBudget": "Zgodnie z budżetem",
+    "showAllPlans": "Pokaż wszystkie plany",
+    "expenseCategories": {
       "food": "Żywność",
       "bills": "Rachunki",
       "transport": "Transport",
@@ -128,6 +138,13 @@
       "health": "Zdrowie",
       "clothing": "Odzież",
       "education": "Edukacja",
+      "other": "Inne"
+    },
+    "incomeCategories": {
+      "salary": "Wypłata",
+      "freelance": "Zlecenia",
+      "bonus": "Premia",
+      "investment": "Inwestycje",
       "other": "Inne"
     }
   },

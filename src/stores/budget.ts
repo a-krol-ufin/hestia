@@ -9,7 +9,8 @@ import type {
   BudgetPlan,
   CreateBudgetPlan,
   MonthlySummary,
-  BudgetCategory,
+  ExpenseCategory,
+  CategoryProgress,
 } from '@/types/budget.types'
 
 export const useBudgetStore = defineStore('budget', () => {
@@ -32,7 +33,7 @@ export const useBudgetStore = defineStore('budget', () => {
       .filter(e => e.type === 'expense')
       .reduce((sum, e) => sum + e.amount, 0)
 
-    const expensesByCategory: Record<BudgetCategory, number> = {
+    const expensesByCategory: Record<ExpenseCategory, number> = {
       food: 0,
       bills: 0,
       transport: 0,
@@ -46,16 +47,60 @@ export const useBudgetStore = defineStore('budget', () => {
     entries.value
       .filter(e => e.type === 'expense')
       .forEach(e => {
-        expensesByCategory[e.category] += e.amount
+        const cat = e.category as ExpenseCategory
+        expensesByCategory[cat] = (expensesByCategory[cat] || 0) + e.amount
       })
+
+    const totalPlanned = plans.value
+      .filter(p => p.month === currentMonth.value || p.recurrent)
+      .reduce((sum, p) => sum + p.amount, 0)
 
     return {
       month: currentMonth.value,
       totalIncome: income,
       totalExpenses: expenses,
+      totalPlanned,
       balance: income - expenses,
+      availableBalance: income - expenses - totalPlanned,
       expensesByCategory,
     }
+  })
+
+  const categoryProgress = computed<CategoryProgress[]>(() => {
+    const categories: ExpenseCategory[] = [
+      'food',
+      'bills',
+      'transport',
+      'entertainment',
+      'health',
+      'clothing',
+      'education',
+      'other',
+    ]
+
+    const currentPlans = plans.value.filter(
+      p => p.month === currentMonth.value || p.recurrent
+    )
+
+    return categories
+      .map(category => {
+        const planned = currentPlans
+          .filter(p => p.category === category)
+          .reduce((sum, p) => sum + p.amount, 0)
+
+        const spent = monthlySummary.value.expensesByCategory[category] || 0
+        const remaining = planned - spent
+        const percentage = planned > 0 ? (spent / planned) * 100 : 0
+
+        return {
+          category,
+          planned,
+          spent,
+          remaining,
+          percentage,
+        }
+      })
+      .filter(p => p.planned > 0) // Only show categories with plans
   })
 
   // Households
@@ -199,6 +244,7 @@ export const useBudgetStore = defineStore('budget', () => {
 
     // Computed
     monthlySummary,
+    categoryProgress,
 
     // Actions
     fetchHouseholds,

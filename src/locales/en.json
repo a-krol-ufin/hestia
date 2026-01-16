@@ -120,7 +120,17 @@
     "createHouseholdDescription": "Start by creating a household to manage your budget together with family members.",
     "householdNamePlaceholder": "e.g., Smith Family",
     "createHouseholdButton": "Create Household",
-    "categories": {
+    "planned": "Planned",
+    "available": "Available",
+    "spent": "Spent",
+    "remaining": "Remaining",
+    "over": "over budget",
+    "budgetProgress": "Budget Progress",
+    "overBudget": "Over budget!",
+    "underBudget": "Under budget",
+    "onBudget": "On budget",
+    "showAllPlans": "Show all plans",
+    "expenseCategories": {
       "food": "Food",
       "bills": "Bills",
       "transport": "Transport",
@@ -128,6 +138,13 @@
       "health": "Health",
       "clothing": "Clothing",
       "education": "Education",
+      "other": "Other"
+    },
+    "incomeCategories": {
+      "salary": "Salary",
+      "freelance": "Freelance",
+      "bonus": "Bonus",
+      "investment": "Investment",
       "other": "Other"
     }
   },

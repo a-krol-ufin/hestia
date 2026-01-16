@@ -2,7 +2,7 @@
 import { ref } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
-import type { BudgetCategory, CreateBudgetPlan } from '@/types/budget.types'
+import type { ExpenseCategory, CreateBudgetPlan } from '@/types/budget.types'
 
 const emit = defineEmits<{
   submit: [plan: CreateBudgetPlan]
@@ -10,12 +10,12 @@ const emit = defineEmits<{
 
 const { t } = useI18n({ useScope: 'global' })
 
-const category = ref<BudgetCategory>('food')
+const category = ref<ExpenseCategory>('food')
 const amount = ref<number>(0)
 const month = ref<string>(new Date().toISOString().slice(0, 7))
 const recurrent = ref<boolean>(false)
 
-const categories: BudgetCategory[] = [
+const categories: ExpenseCategory[] = [
   'food',
   'bills',
   'transport',
@@ -60,7 +60,7 @@ function handleSubmit() {
           class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-200 focus:border-orange-500"
         >
           <option v-for="cat in categories" :key="cat" :value="cat">
-            {{ t(`budget.categories.${cat}`) }}
+            {{ t(`budget.expenseCategories.${cat}`) }}
           </option>
         </select>
       </div>

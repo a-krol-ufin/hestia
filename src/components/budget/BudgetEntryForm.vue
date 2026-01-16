@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
-import type { BudgetCategory, EntryType, CreateBudgetEntry } from '@/types/budget.types'
+import type { BudgetCategory, EntryType, CreateBudgetEntry, ExpenseCategory, IncomeCategory } from '@/types/budget.types'
 import CategoryIcon from './CategoryIcon.vue'
 
 const emit = defineEmits<{
@@ -17,7 +17,7 @@ const amount = ref<number>(0)
 const description = ref<string>('')
 const date = ref<string>(new Date().toISOString().slice(0, 10))
 
-const categories: BudgetCategory[] = [
+const expenseCategories: ExpenseCategory[] = [
   'food',
   'bills',
   'transport',
@@ -27,6 +27,27 @@ const categories: BudgetCategory[] = [
   'education',
   'other',
 ]
+
+const incomeCategories: IncomeCategory[] = [
+  'salary',
+  'freelance',
+  'bonus',
+  'investment',
+  'other',
+]
+
+const categories = computed<BudgetCategory[]>(() => {
+  return type.value === 'expense' ? expenseCategories : incomeCategories
+})
+
+// Reset category when type changes
+watch(type, (newType) => {
+  if (newType === 'expense') {
+    category.value = 'food'
+  } else {
+    category.value = 'salary'
+  }
+})
 
 function handleSubmit() {
   if (amount.value <= 0) return
@@ -96,7 +117,7 @@ function handleSubmit() {
           class="w-full px-4 py-2 border border-slate-300 rounded-lg focus:ring-2 focus:ring-orange-200 focus:border-orange-500"
         >
           <option v-for="cat in categories" :key="cat" :value="cat">
-            {{ t(`budget.categories.${cat}`) }}
+            {{ type === 'expense' ? t(`budget.expenseCategories.${cat}`) : t(`budget.incomeCategories.${cat}`) }}
           </option>
         </select>
       </div>

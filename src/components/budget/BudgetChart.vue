@@ -1,17 +1,17 @@
 <script setup lang="ts">
 import { computed } from 'vue'
 import { useI18n } from 'vue-i18n'
-import type { BudgetCategory } from '@/types/budget.types'
+import type { ExpenseCategory } from '@/types/budget.types'
 import CategoryIcon from './CategoryIcon.vue'
 
 interface Props {
-  expensesByCategory: Record<BudgetCategory, number>
+  expensesByCategory: Record<ExpenseCategory, number>
 }
 
 const props = defineProps<Props>()
 const { t } = useI18n({ useScope: 'global' })
 
-const colorMap: Record<BudgetCategory, string> = {
+const colorMap: Record<ExpenseCategory, string> = {
   food: '#f97316',      // orange-500
   bills: '#3b82f6',     // blue-500
   transport: '#22c55e', // green-500
@@ -27,7 +27,7 @@ const total = computed(() => {
 })
 
 const chartData = computed(() => {
-  const categories = Object.keys(props.expensesByCategory) as BudgetCategory[]
+  const categories = Object.keys(props.expensesByCategory) as ExpenseCategory[]
   const data = categories
     .map(cat => ({
       category: cat,
@@ -130,7 +130,7 @@ function describeArc(x: number, y: number, radius: number, startAngle: number, e
             />
             <CategoryIcon :category="item.category" size="sm" />
             <span class="font-medium text-slate-700">
-              {{ t(`budget.categories.${item.category}`) }}
+              {{ t(`budget.expenseCategories.${item.category}`) }}
             </span>
           </div>
           <div class="flex items-center gap-4">

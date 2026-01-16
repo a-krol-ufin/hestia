@@ -12,7 +12,9 @@ import { useI18n } from 'vue-i18n'
 interface Props {
   totalIncome: number
   totalExpenses: number
+  totalPlanned: number
   balance: number
+  availableBalance: number
   month: string
 }
 
@@ -31,13 +33,13 @@ const formattedMonth = computed(() => {
 })
 
 const balanceColor = computed(() => {
-  if (props.balance > 0) return 'text-green-600'
-  if (props.balance < 0) return 'text-red-600'
+  if (props.availableBalance > 0) return 'text-green-600'
+  if (props.availableBalance < 0) return 'text-red-600'
   return 'text-slate-600'
 })
 
 const balanceIcon = computed(() => {
-  return props.balance >= 0 ? ArrowTrendingUpIcon : ArrowTrendingDownIcon
+  return props.availableBalance >= 0 ? ArrowTrendingUpIcon : ArrowTrendingDownIcon
 })
 </script>
 
@@ -67,7 +69,7 @@ const balanceIcon = computed(() => {
     </div>
 
     <!-- Summary cards -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
       <!-- Income -->
       <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
         <div class="flex items-center gap-2 mb-2">
@@ -90,15 +92,26 @@ const balanceIcon = computed(() => {
         </p>
       </div>
 
-      <!-- Balance -->
+      <!-- Planned -->
       <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
         <div class="flex items-center gap-2 mb-2">
           <BanknotesIcon class="w-5 h-5" />
-          <span class="text-sm font-medium">{{ t('budget.balance') }}</span>
+          <span class="text-sm font-medium">{{ t('budget.planned') }}</span>
+        </div>
+        <p class="text-2xl font-bold">
+          {{ totalPlanned.toFixed(2) }}
+        </p>
+      </div>
+
+      <!-- Available Balance -->
+      <div class="bg-white/10 backdrop-blur-sm rounded-lg p-4">
+        <div class="flex items-center gap-2 mb-2">
+          <BanknotesIcon class="w-5 h-5" />
+          <span class="text-sm font-medium">{{ t('budget.available') }}</span>
         </div>
         <p class="text-2xl font-bold flex items-center gap-2">
           <component :is="balanceIcon" class="w-6 h-6" />
-          {{ balance.toFixed(2) }}
+          {{ availableBalance.toFixed(2) }}
         </p>
       </div>
     </div>
