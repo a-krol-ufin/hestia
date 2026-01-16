@@ -1,12 +1,24 @@
 <script setup lang="ts">
-import { useI18n } from 'vue-i18n';
-import { useAppStore } from '@/stores/app';
+import { useRouter } from 'vue-router'
+import { useI18n } from 'vue-i18n'
+import { useAppStore } from '@/stores/app'
+import { useAuthStore } from '@/stores/auth'
 
-const { t } = useI18n({ useScope: 'global' });
-const appStore = useAppStore();
+const router = useRouter()
+const { t } = useI18n({ useScope: 'global' })
+const appStore = useAppStore()
+const authStore = useAuthStore()
 
-const heroContent = appStore.content.hero;
-const ctaButton = heroContent.ctaButton;
+const heroContent = appStore.content.hero
+const ctaButton = heroContent.ctaButton
+
+function handleCtaClick() {
+  if (authStore.isAuthenticated) {
+    router.push('/dashboard')
+  } else {
+    router.push('/login')
+  }
+}
 </script>
 
 <template>
@@ -18,11 +30,10 @@ const ctaButton = heroContent.ctaButton;
       <p class="text-lg md:text-xl text-slate-600 max-w-3xl mx-auto mb-8">
         {{ t('content.hero.subheadline') }}
       </p>
-      <a :href="ctaButton.action" :class="ctaButton.styleClass">
+      <button @click="handleCtaClick" :class="ctaButton.styleClass">
         {{ t('content.hero.ctaButton.text') }}
-      </a>
+      </button>
       <div class="mt-12">
-        <!-- Placeholder for the image -->
         <div class="bg-gray-200 h-64 w-full max-w-4xl mx-auto rounded-lg shadow-xl flex items-center justify-center">
           <span class="text-gray-500">{{ heroContent.imagePlaceholder }}</span>
         </div>

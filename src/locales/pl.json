@@ -49,6 +49,32 @@
       "copyright": "© 2026 Hestia. Projekt Open Source."
     }
   },
+  "dashboard": {
+    "title": "Panel główny",
+    "welcome": "Witaj ponownie",
+    "comingSoon": "Wkrótce",
+    "features": {
+      "shopping": {
+        "title": "Lista zakupów",
+        "description": "Zarządzaj listą zakupów"
+      },
+      "budget": {
+        "title": "Budżet",
+        "description": "Śledź wydatki"
+      },
+      "tasks": {
+        "title": "Zadania",
+        "description": "Zarządzaj zadaniami domowymi"
+      }
+    }
+  },
+  "shopping": {
+    "title": "Lista zakupów",
+    "addPlaceholder": "Dodaj produkt...",
+    "addButton": "Dodaj",
+    "empty": "Twoja lista zakupów jest pusta",
+    "back": "Powrót do panelu"
+  },
   "auth": {
     "form": {
       "email": "Email",

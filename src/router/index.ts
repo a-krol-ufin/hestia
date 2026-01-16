@@ -21,6 +21,18 @@ const router = createRouter({
       component: () => import('@/pages/RegisterPage.vue'),
       meta: { requiresGuest: true },
     },
+    {
+      path: '/dashboard',
+      name: 'dashboard',
+      component: () => import('@/pages/DashboardPage.vue'),
+      meta: { requiresAuth: true },
+    },
+    {
+      path: '/shopping',
+      name: 'shopping',
+      component: () => import('@/pages/ShoppingListPage.vue'),
+      meta: { requiresAuth: true },
+    },
   ],
 })
 
@@ -28,7 +40,12 @@ router.beforeEach((to, _from, next) => {
   const authStore = useAuthStore()
 
   if (to.meta.requiresGuest && authStore.isAuthenticated) {
-    next({ name: 'home' })
+    next({ name: 'dashboard' })
+    return
+  }
+
+  if (to.meta.requiresAuth && !authStore.isAuthenticated) {
+    next({ name: 'login' })
     return
   }
 
