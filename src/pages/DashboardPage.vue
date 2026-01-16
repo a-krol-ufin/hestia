@@ -21,7 +21,7 @@ const features = [
     id: 'budget',
     icon: ChartPieIcon,
     route: '/budget',
-    available: false,
+    available: true,
   },
   {
     id: 'tasks',

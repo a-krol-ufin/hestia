@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
@@ -34,6 +34,7 @@ async function handleSubmit() {
   })
 
   if (success) {
+    await nextTick()
     router.push('/')
   }
 }

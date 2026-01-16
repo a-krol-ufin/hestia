@@ -29,7 +29,7 @@ migrate((app) => {
       {
         name: "checked",
         type: "bool",
-        required: true,
+        required: false,
       },
       {
         name: "user",
