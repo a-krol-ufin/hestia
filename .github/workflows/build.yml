@@ -1,0 +1,76 @@
+name: Build and Push
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: ${{ github.repository }}
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Lowercase repository name
+        run: |
+          echo "REPO_LC=${IMAGE_NAME,,}" >>${GITHUB_ENV}
+
+      - name: Check for changes
+        uses: dorny/paths-filter@v3
+        id: changes
+        with:
+          filters: |
+            hestia:
+              - 'Dockerfile'
+              - 'package.json'
+              - 'package-lock.json'
+              - 'src/**'
+              - 'public/**'
+              - 'index.html'
+              - 'vite.config.*'
+            pocketbase:
+              - 'pocketbase.Dockerfile'
+              - 'pb_migrations/**'
+
+      - name: Log in to Container Registry
+        if: steps.changes.outputs.hestia == 'true' || steps.changes.outputs.pocketbase == 'true'
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Docker Buildx
+        if: steps.changes.outputs.hestia == 'true' || steps.changes.outputs.pocketbase == 'true'
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Hestia
+        if: steps.changes.outputs.hestia == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.REPO_LC }}/hestia:latest
+            ${{ env.REGISTRY }}/${{ env.REPO_LC }}/hestia:${{ github.sha }}
+
+      - name: Build and push PocketBase
+        if: steps.changes.outputs.pocketbase == 'true'
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: pocketbase.Dockerfile
+          push: true
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.REPO_LC }}/pocketbase:latest
+            ${{ env.REGISTRY }}/${{ env.REPO_LC }}/pocketbase:${{ github.sha }}
