@@ -2,18 +2,18 @@
   "content": {
     "navbar": {
       "links": {
+        "home": {
+          "label": "Strona główna"
+        },
         "features": {
           "label": "Funkcje"
         },
-        "install": {
-          "label": "Instalacja"
+        "about": {
+          "label": "O nas"
         },
-        "github": {
-          "label": "GitHub"
+        "contact": {
+          "label": "Kontakt"
         }
-      },
-      "languageSwitch": {
-        "label": "EN"
       },
       "user": {
         "login": "Zaloguj się",
@@ -22,31 +22,38 @@
       }
     },
     "hero": {
-      "headline": "Twój dom w pełnej harmonii.",
-      "subheadline": "Prywatne, hostowane u siebie rozwiązanie do zarządzania zakupami, budżetem i obowiązkami. Twoje dane zostają w Twoim domu.",
+      "headline": "Twój Dom w Harmonii",
+      "subheadline": "Bezproblemowe zarządzanie rodziną dla spokojnego domu. Listy zakupów, budżet i obowiązki - wszystko w jednym miejscu.",
       "ctaButton": {
-        "text": "Zacznij Teraz"
-      }
+        "text": "Zacznij teraz"
+      },
+      "imageAlt": "Szczęśliwa rodzina siedząca na kanapie z ikonami produktywności"
     },
     "featuresSection": {
-      "title": "Wszystko, czego potrzebujesz do prowadzenia domu",
+      "title": "Wszystko, czego potrzebujesz",
+      "subtitle": "Proste narzędzia do sprawnego prowadzenia domu",
       "cards": {
         "shopping": {
-          "title": "Inteligentne Zakupy",
-          "description": "Listy synchronizowane w czasie rzeczywistym. Nigdy więcej nie zapomnisz mleka."
+          "title": "Inteligentne listy zakupów",
+          "description": "Nigdy więcej nie zapomnisz mleka. Listy synchronizowane w czasie rzeczywistym dla całej rodziny."
         },
         "budget": {
-          "title": "Kontrola Budżetu",
-          "description": "Śledź wydatki, ustawiaj limity i sprawdzaj na wykresach, gdzie uciekają pieniądze."
+          "title": "Budżet i rachunki",
+          "description": "Śledź wydatki i oszczędzaj. Spokój finansowy dla Twojej rodziny."
         },
-        "privacy": {
-          "title": "Prywatność nade wszystko",
-          "description": "Self-hosted na Dockerze. Twoje dane żyją na Twoim serwerze, nie w chmurze korporacji."
+        "tasks": {
+          "title": "Zadania i obowiązki",
+          "description": "Dziel i rządź. Domowe obowiązki stają się proste dzięki inteligentnemu zarządzaniu."
         }
       }
     },
     "footer": {
-      "copyright": "© 2026 Hestia. Projekt Open Source."
+      "copyright": "© 2026 Hestia. Projekt Open Source.",
+      "links": {
+        "features": "Funkcje",
+        "about": "O nas",
+        "github": "GitHub"
+      }
     }
   },
   "dashboard": {

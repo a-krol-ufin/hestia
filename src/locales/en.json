@@ -2,18 +2,18 @@
   "content": {
     "navbar": {
       "links": {
+        "home": {
+          "label": "Home"
+        },
         "features": {
           "label": "Features"
         },
-        "install": {
-          "label": "Installation"
+        "about": {
+          "label": "About Us"
         },
-        "github": {
-          "label": "GitHub"
+        "contact": {
+          "label": "Contact"
         }
-      },
-      "languageSwitch": {
-        "label": "PL"
       },
       "user": {
         "login": "Sign In",
@@ -22,31 +22,38 @@
       }
     },
     "hero": {
-      "headline": "Your Home, Harmonized.",
-      "subheadline": "The privacy-focused, self-hosted solution to manage shopping lists, family budgets, and chores. Your data stays in your home.",
+      "headline": "Your Home, Harmonized",
+      "subheadline": "Effortless family management for a peaceful household. Shopping lists, budgets, and chores - all in one place.",
       "ctaButton": {
         "text": "Get Started"
-      }
+      },
+      "imageAlt": "Happy family sitting on a sofa with productivity icons"
     },
     "featuresSection": {
-      "title": "Everything you need to run your household",
+      "title": "Everything You Need",
+      "subtitle": "Simple tools to keep your household running smoothly",
       "cards": {
         "shopping": {
-          "title": "Smart Shopping",
-          "description": "Real-time sync lists. Never forget milk again. Add items as you notice they are missing."
+          "title": "Smart Shopping Lists",
+          "description": "Never forget milk again. Real-time lists synced for everyone in your family."
         },
         "budget": {
-          "title": "Budget Control",
-          "description": "Track expenses, set monthly limits, and see where your money goes with clear charts."
+          "title": "Budget & Bills",
+          "description": "Track spending and save money. Financial peace of mind for your family."
         },
-        "privacy": {
-          "title": "Privacy First",
-          "description": "Self-hosted with Docker. Your data lives on your server, not in a corporation's cloud."
+        "tasks": {
+          "title": "Tasks & Chores",
+          "description": "Divide and conquer. Make household chores a breeze with smart task management."
         }
       }
     },
     "footer": {
-      "copyright": "© 2026 Hestia. Open Source Project."
+      "copyright": "© 2026 Hestia. Open Source Project.",
+      "links": {
+        "features": "Features",
+        "about": "About Us",
+        "github": "GitHub"
+      }
     }
   },
   "dashboard": {
