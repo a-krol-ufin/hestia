@@ -14,6 +14,11 @@
       },
       "languageSwitch": {
         "label": "EN"
+      },
+      "user": {
+        "login": "Zaloguj się",
+        "logout": "Wyloguj się",
+        "loggedAs": "Zalogowany jako"
       }
     },
     "hero": {
