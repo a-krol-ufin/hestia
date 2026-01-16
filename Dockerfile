@@ -22,4 +22,13 @@ RUN rm /etc/nginx/conf.d/default.conf && \
     echo '}' >> /etc/nginx/conf.d/default.conf
 
 EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+
+# Create a script to generate env-config.js from environment variables
+RUN echo '#!/bin/sh' > /docker-entrypoint.sh && \
+    echo 'echo "window.env = {" > /usr/share/nginx/html/env-config.js' >> /docker-entrypoint.sh && \
+    echo 'echo "  VITE_POCKETBASE_URL: \"$VITE_POCKETBASE_URL\"" >> /usr/share/nginx/html/env-config.js' >> /docker-entrypoint.sh && \
+    echo 'echo "};" >> /usr/share/nginx/html/env-config.js' >> /docker-entrypoint.sh && \
+    echo 'exec nginx -g "daemon off;"' >> /docker-entrypoint.sh && \
+    chmod +x /docker-entrypoint.sh
+
+CMD ["/docker-entrypoint.sh"]

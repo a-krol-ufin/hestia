@@ -20,17 +20,15 @@ services:
     build:
       context: .
       dockerfile: pocketbase.Dockerfile
-      # You can specify the PocketBase version here
       args:
         PB_VERSION: 0.22.12
     ports:
-      - "8090:8080" # The port was changed from 8090 to 8080 in the Dockerfile
+      - "8090:8090"
     volumes:
       - pb_data:/pb/data
     restart: unless-stopped
     healthcheck:
-      # The healthcheck now targets port 8080 inside the container
-      test: "wget --no-verbose --tries=1 --spider http://localhost:8080/api/health || exit 1"
+      test: "wget --no-verbose --tries=1 --spider http://localhost:8090/api/health || exit 1"
       interval: 5s
       timeout: 5s
       retries: 5
