@@ -14,6 +14,8 @@ RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSIO
     && unzip /tmp/pb.zip -d /pb/ \
     && rm /tmp/pb.zip
 
+COPY ./pb_migrations /pb/pb_migrations
+
 RUN chmod +x /pb/pocketbase
 
 EXPOSE 8090
