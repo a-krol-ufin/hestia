@@ -1,22 +1,21 @@
 FROM alpine:latest
 
-# You can change the PocketBase version here
-ARG PB_VERSION=0.22.12
+ARG PB_VERSION=0.36.0
+ARG TARGETOS
+ARG TARGETARCH
 
 RUN apk add --no-cache \
     unzip \
     ca-certificates \
-    wget # wget is required for the healthcheck
+    wget
 
-# Download and unzip PocketBase
-ADD https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_linux_amd64.zip /tmp/pb.zip
-RUN unzip /tmp/pb.zip -d /pb/
+RUN wget https://github.com/pocketbase/pocketbase/releases/download/v${PB_VERSION}/pocketbase_${PB_VERSION}_${TARGETOS}_${TARGETARCH}.zip \
+    -O /tmp/pb.zip \
+    && unzip /tmp/pb.zip -d /pb/ \
+    && rm /tmp/pb.zip
 
-# Copy migrations
-COPY ./pb_migrations /pb/pb_migrations
+RUN chmod +x /pb/pocketbase
 
-EXPOSE 8080
+EXPOSE 8090
 
-# Start PocketBase and specify the data directory for persistence
-CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8080", "--dir=/pb/data"]
-
+CMD ["/pb/pocketbase", "serve", "--http=0.0.0.0:8090"]
