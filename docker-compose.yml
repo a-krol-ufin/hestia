@@ -21,7 +21,7 @@ services:
       context: .
       dockerfile: pocketbase.Dockerfile
       args:
-        PB_VERSION: 0.22.12
+        PB_VERSION: 0.36.0
     ports:
       - "8090:8090"
     volumes:
