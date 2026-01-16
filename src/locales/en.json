@@ -105,5 +105,10 @@
       "hasAccount": "Already have an account?",
       "loginLink": "Sign In"
     }
+  },
+  "notFound": {
+    "title": "Page Not Found",
+    "description": "Oops! The page you are looking for does not exist.",
+    "backButton": "Go Home"
   }
 }

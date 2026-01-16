@@ -105,5 +105,10 @@
       "hasAccount": "Masz już konto?",
       "loginLink": "Zaloguj się"
     }
+  },
+  "notFound": {
+    "title": "Strona nie znaleziona",
+    "description": "Ups! Strona, której szukasz, nie istnieje.",
+    "backButton": "Wróć do strony głównej"
   }
 }

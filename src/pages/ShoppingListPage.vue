@@ -37,7 +37,7 @@ function goBack() {
 <template>
   <div class="min-h-screen bg-orange-50 flex flex-col">
     <Navbar />
-    <main class="flex-grow">
+    <main class="flex-grow pt-28">
       <div class="container mx-auto px-6 py-8 max-w-2xl">
         <div class="mb-8">
           <button

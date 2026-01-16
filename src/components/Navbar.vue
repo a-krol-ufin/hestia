@@ -7,14 +7,14 @@ import { useAuthStore } from '@/stores/auth'
 import { UserCircleIcon, ArrowRightOnRectangleIcon, Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
-const { t, locale } = useI18n({ useScope: 'global' })
+const { t } = useI18n({ useScope: 'global' })
 const appStore = useAppStore()
 const authStore = useAuthStore()
 
 const isDropdownOpen = ref(false)
 const isMobileMenuOpen = ref(false)
 
-const currentLocale = computed(() => locale.value)
+const currentLocale = computed(() => appStore.language)
 
 const navLinks = [
   { id: 'home', href: '/' },
@@ -42,7 +42,7 @@ function handleLogout() {
 }
 
 function setLanguage(lang: string) {
-  locale.value = lang
+  appStore.setLanguage(lang)
 }
 
 function toggleMobileMenu() {

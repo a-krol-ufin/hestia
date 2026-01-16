@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import i18n from '@/i18n'
 
 export const useAppStore = defineStore('app', () => {
@@ -44,16 +44,34 @@ export const useAppStore = defineStore('app', () => {
     }
   }
 
+  const storedLang = localStorage.getItem('user-language')
+  const defaultLang = storedLang || 'en'
+  const language = ref(defaultLang)
+
+  // Initialize i18n
+  if (i18n.global.locale.value !== language.value) {
+    i18n.global.locale.value = language.value as any
+  }
+
   const theme = computed(() => config.meta.theme)
   const content = computed(() => config.content)
 
+  function setLanguage(lang: string) {
+    language.value = lang
+    i18n.global.locale.value = lang as any
+    localStorage.setItem('user-language', lang)
+  }
+
   function toggleLanguage() {
-    i18n.global.locale.value = i18n.global.locale.value === 'en' ? 'pl' : 'en'
+    const newLang = language.value === 'en' ? 'pl' : 'en'
+    setLanguage(newLang)
   }
 
   return {
     theme,
     content,
+    language,
+    setLanguage,
     toggleLanguage,
   }
 })
