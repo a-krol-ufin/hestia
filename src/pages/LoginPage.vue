@@ -7,7 +7,7 @@ import AuthFormCard from '@/components/auth/AuthFormCard.vue'
 import AuthFormInput from '@/components/auth/AuthFormInput.vue'
 
 const router = useRouter()
-const { t } = useI18n()
+const { t } = useI18n({ useScope: 'global' })
 const authStore = useAuthStore()
 
 const email = ref('')
