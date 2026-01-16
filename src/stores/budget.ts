@@ -132,10 +132,46 @@ export const useBudgetStore = defineStore('budget', () => {
     }
   }
 
-  async function selectHousehold(household: Household) {
-    currentHousehold.value = household
-    await fetchEntriesForMonth(currentMonth.value)
-    await fetchPlansForMonth(currentMonth.value)
+  async function updateHousehold(id: string, data: { name: string }) {
+    error.value = null
+    const updated = await budgetService.updateHousehold(id, data)
+    if (updated) {
+      const index = households.value.findIndex(h => h.id === id)
+      if (index !== -1) {
+        households.value[index] = updated
+      }
+      if (currentHousehold.value?.id === id) {
+        currentHousehold.value = updated
+      }
+    } else {
+      error.value = 'Failed to update household'
+    }
+  }
+
+  async function deleteHousehold(id: string) {
+    error.value = null
+    const success = await budgetService.deleteHousehold(id)
+    if (success) {
+      households.value = households.value.filter(h => h.id !== id)
+      if (currentHousehold.value?.id === id) {
+        currentHousehold.value = households.value[0] || null
+        if (currentHousehold.value) {
+          await fetchEntriesForMonth(currentMonth.value)
+          await fetchPlansForMonth(currentMonth.value)
+        }
+      }
+    } else {
+      error.value = 'Failed to delete household'
+    }
+  }
+
+  async function selectHousehold(id: string) {
+    const household = households.value.find(h => h.id === id)
+    if (household) {
+      currentHousehold.value = household
+      await fetchEntriesForMonth(currentMonth.value)
+      await fetchPlansForMonth(currentMonth.value)
+    }
   }
 
   // Entries
@@ -249,6 +285,8 @@ export const useBudgetStore = defineStore('budget', () => {
     // Actions
     fetchHouseholds,
     createHousehold,
+    updateHousehold,
+    deleteHousehold,
     selectHousehold,
     fetchEntriesForMonth,
     addEntry,

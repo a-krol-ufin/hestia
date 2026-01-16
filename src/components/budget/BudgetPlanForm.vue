@@ -95,16 +95,31 @@ function handleSubmit() {
       </div>
 
       <!-- Recurrent -->
-      <div class="flex items-center gap-3">
-        <input
-          v-model="recurrent"
-          type="checkbox"
-          id="recurrent"
-          class="w-5 h-5 text-orange-500 border-slate-300 rounded focus:ring-2 focus:ring-orange-200"
-        />
-        <label for="recurrent" class="text-sm font-medium text-slate-700 cursor-pointer">
-          {{ t('budget.recurrent') }}
-        </label>
+      <div class="border-2 border-dashed border-orange-200 rounded-lg p-4 bg-orange-50/50">
+        <div class="flex items-start gap-3">
+          <input
+            v-model="recurrent"
+            type="checkbox"
+            id="recurrent"
+            class="w-5 h-5 mt-0.5 text-orange-500 border-slate-300 rounded focus:ring-2 focus:ring-orange-200"
+          />
+          <div class="flex-1">
+            <label for="recurrent" class="text-sm font-semibold text-slate-800 cursor-pointer block mb-1">
+              {{ t('budget.recurrent') }}
+            </label>
+            <p class="text-xs text-slate-600">
+              {{ t('budget.recurrentDescription') }}
+            </p>
+          </div>
+        </div>
+        <div v-if="recurrent" class="mt-3 pt-3 border-t border-orange-200">
+          <p class="text-xs text-orange-700 font-medium flex items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+            {{ t('budget.recurrentNote') }}
+          </p>
+        </div>
       </div>
 
       <!-- Submit button -->

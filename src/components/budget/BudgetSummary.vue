@@ -8,6 +8,7 @@ import {
   ChevronRightIcon,
 } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
+import { useAppStore } from '@/stores/app'
 
 interface Props {
   totalIncome: number
@@ -25,11 +26,12 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n({ useScope: 'global' })
+const appStore = useAppStore()
 
 const formattedMonth = computed(() => {
   const [year = '', month = ''] = props.month.split('-')
   const date = new Date(parseInt(year), parseInt(month) - 1)
-  return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long' })
+  return date.toLocaleDateString(appStore.language, { year: 'numeric', month: 'long' })
 })
 
 const balanceColor = computed(() => {

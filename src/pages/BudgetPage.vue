@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useBudgetStore } from '@/stores/budget'
+import { useAppStore } from '@/stores/app'
 import { ArrowLeftIcon, ChartPieIcon, TrashIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
@@ -12,15 +13,19 @@ import BudgetEntryForm from '@/components/budget/BudgetEntryForm.vue'
 import BudgetPlanForm from '@/components/budget/BudgetPlanForm.vue'
 import BudgetCategoryProgress from '@/components/budget/BudgetCategoryProgress.vue'
 import CategoryIcon from '@/components/budget/CategoryIcon.vue'
+import HouseholdDropdown from '@/components/budget/HouseholdDropdown.vue'
+import ManageHouseholdsModal from '@/components/budget/ManageHouseholdsModal.vue'
 import type { CreateBudgetEntry, CreateBudgetPlan } from '@/types/budget.types'
 
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
 const budgetStore = useBudgetStore()
+const appStore = useAppStore()
 
 const showPlanForm = ref(false)
 const newHouseholdName = ref('')
 const showHouseholdForm = ref(false)
+const showManageModal = ref(false)
 
 onMounted(async () => {
   await budgetStore.fetchHouseholds()
@@ -76,7 +81,7 @@ async function createHousehold() {
 
 function formatDate(dateString: string) {
   const date = new Date(dateString)
-  return date.toLocaleDateString(undefined, {
+  return date.toLocaleDateString(appStore.language, {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -103,16 +108,19 @@ function goBack() {
             <span>{{ t('budget.back') }}</span>
           </button>
 
-          <div class="flex items-center space-x-3">
-            <div class="bg-orange-100 p-3 rounded-lg">
-              <ChartPieIcon class="w-8 h-8 text-orange-500" />
+          <div class="flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+              <div class="bg-orange-100 p-3 rounded-lg">
+                <ChartPieIcon class="w-8 h-8 text-orange-500" />
+              </div>
+              <div>
+                <h1 class="text-3xl font-bold text-slate-800">{{ t('budget.title') }}</h1>
+              </div>
             </div>
-            <div>
-              <h1 class="text-3xl font-bold text-slate-800">{{ t('budget.title') }}</h1>
-              <p v-if="budgetStore.currentHousehold" class="text-slate-600">
-                {{ budgetStore.currentHousehold.name }}
-              </p>
-            </div>
+            <HouseholdDropdown
+              v-if="budgetStore.currentHousehold"
+              @open-manage-modal="showManageModal = true"
+            />
           </div>
         </div>
 
@@ -312,5 +320,11 @@ function goBack() {
       </div>
     </main>
     <Footer />
+
+    <!-- Manage Households Modal -->
+    <ManageHouseholdsModal
+      v-if="showManageModal"
+      @close="showManageModal = false"
+    />
   </div>
 </template>
