@@ -35,3 +35,4 @@ coverage
 __screenshots__/
 pocketbase.exe
 pb_data/*
+.env

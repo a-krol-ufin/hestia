@@ -43,5 +43,29 @@
     "footer": {
       "copyright": "© 2026 Hestia. Projekt Open Source."
     }
+  },
+  "auth": {
+    "form": {
+      "email": "Email",
+      "emailPlaceholder": "Wprowadź swój email",
+      "password": "Hasło",
+      "passwordPlaceholder": "Wprowadź hasło",
+      "passwordConfirm": "Potwierdź hasło",
+      "passwordConfirmPlaceholder": "Potwierdź swoje hasło",
+      "passwordMismatch": "Hasła nie są zgodne",
+      "loading": "Proszę czekać..."
+    },
+    "login": {
+      "title": "Witaj ponownie",
+      "submit": "Zaloguj się",
+      "noAccount": "Nie masz jeszcze konta?",
+      "registerLink": "Zarejestruj się"
+    },
+    "register": {
+      "title": "Stwórz konto",
+      "submit": "Zarejestruj się",
+      "hasAccount": "Masz już konto?",
+      "loginLink": "Zaloguj się"
+    }
   }
 }
