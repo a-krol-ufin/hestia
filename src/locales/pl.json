@@ -1,0 +1,47 @@
+{
+  "content": {
+    "navbar": {
+      "links": {
+        "features": {
+          "label": "Funkcje"
+        },
+        "install": {
+          "label": "Instalacja"
+        },
+        "github": {
+          "label": "GitHub"
+        }
+      },
+      "languageSwitch": {
+        "label": "EN"
+      }
+    },
+    "hero": {
+      "headline": "Twój dom w pełnej harmonii.",
+      "subheadline": "Prywatne, hostowane u siebie rozwiązanie do zarządzania zakupami, budżetem i obowiązkami. Twoje dane zostają w Twoim domu.",
+      "ctaButton": {
+        "text": "Zacznij Teraz"
+      }
+    },
+    "featuresSection": {
+      "title": "Wszystko, czego potrzebujesz do prowadzenia domu",
+      "cards": {
+        "shopping": {
+          "title": "Inteligentne Zakupy",
+          "description": "Listy synchronizowane w czasie rzeczywistym. Nigdy więcej nie zapomnisz mleka."
+        },
+        "budget": {
+          "title": "Kontrola Budżetu",
+          "description": "Śledź wydatki, ustawiaj limity i sprawdzaj na wykresach, gdzie uciekają pieniądze."
+        },
+        "privacy": {
+          "title": "Prywatność nade wszystko",
+          "description": "Self-hosted na Dockerze. Twoje dane żyją na Twoim serwerze, nie w chmurze korporacji."
+        }
+      }
+    },
+    "footer": {
+      "copyright": "© 2026 Hestia. Projekt Open Source."
+    }
+  }
+}

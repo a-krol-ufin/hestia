@@ -1,0 +1,47 @@
+{
+  "content": {
+    "navbar": {
+      "links": {
+        "features": {
+          "label": "Features"
+        },
+        "install": {
+          "label": "Installation"
+        },
+        "github": {
+          "label": "GitHub"
+        }
+      },
+      "languageSwitch": {
+        "label": "PL"
+      }
+    },
+    "hero": {
+      "headline": "Your Home, Harmonized.",
+      "subheadline": "The privacy-focused, self-hosted solution to manage shopping lists, family budgets, and chores. Your data stays in your home.",
+      "ctaButton": {
+        "text": "Get Started"
+      }
+    },
+    "featuresSection": {
+      "title": "Everything you need to run your household",
+      "cards": {
+        "shopping": {
+          "title": "Smart Shopping",
+          "description": "Real-time sync lists. Never forget milk again. Add items as you notice they are missing."
+        },
+        "budget": {
+          "title": "Budget Control",
+          "description": "Track expenses, set monthly limits, and see where your money goes with clear charts."
+        },
+        "privacy": {
+          "title": "Privacy First",
+          "description": "Self-hosted with Docker. Your data lives on your server, not in a corporation's cloud."
+        }
+      }
+    },
+    "footer": {
+      "copyright": "© 2026 Hestia. Open Source Project."
+    }
+  }
+}
