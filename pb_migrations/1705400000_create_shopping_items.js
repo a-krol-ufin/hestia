@@ -73,9 +73,13 @@ migrate((db) => {
     deleteRule: '@request.auth.id != "" && user = @request.auth.id',
   });
 
-  return Dao(db).saveCollection(collection);
+  // ZMIANA: Zamiast Dao(db).saveCollection używamy db.saveCollection
+  return db.saveCollection(collection);
+
 }, (db) => {
-  const dao = new Dao(db);
-  const collection = dao.findCollectionByNameOrId("pbc_shopping_items");
-  return dao.deleteCollection(collection);
+  // ZMIANA: Zamiast dao.find... używamy db.find...
+  const collection = db.findCollectionByNameOrId("pbc_shopping_items");
+
+  // ZMIANA: Zamiast dao.delete... używamy db.delete...
+  return db.deleteCollection(collection);
 });
