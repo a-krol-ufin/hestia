@@ -50,7 +50,7 @@ export const useAppStore = defineStore('app', () => {
 
   // Initialize i18n
   if (i18n.global.locale.value !== language.value) {
-    i18n.global.locale.value = language.value as any
+    i18n.global.locale.value = language.value as 'en' | 'pl'
   }
 
   const theme = computed(() => config.meta.theme)
@@ -58,7 +58,7 @@ export const useAppStore = defineStore('app', () => {
 
   function setLanguage(lang: string) {
     language.value = lang
-    i18n.global.locale.value = lang as any
+    i18n.global.locale.value = lang as 'en' | 'pl'
     localStorage.setItem('user-language', lang)
   }
 

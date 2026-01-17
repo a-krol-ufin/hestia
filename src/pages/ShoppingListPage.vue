@@ -22,7 +22,7 @@ function handleAddItem(item: { name: string; quantity: number; unit?: ShoppingUn
   shoppingStore.addItem(item)
 }
 
-function handleUpdateItem(id: string, data: any) {
+function handleUpdateItem(id: string, data: { name?: string; quantity?: number; unit?: ShoppingUnit }) {
   shoppingStore.updateItem(id, data)
 }
 

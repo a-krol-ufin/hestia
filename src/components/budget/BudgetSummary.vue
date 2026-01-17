@@ -34,12 +34,6 @@ const formattedMonth = computed(() => {
   return date.toLocaleDateString(appStore.language, { year: 'numeric', month: 'long' })
 })
 
-const balanceColor = computed(() => {
-  if (props.availableBalance > 0) return 'text-green-600'
-  if (props.availableBalance < 0) return 'text-red-600'
-  return 'text-slate-600'
-})
-
 const balanceIcon = computed(() => {
   return props.availableBalance >= 0 ? ArrowTrendingUpIcon : ArrowTrendingDownIcon
 })

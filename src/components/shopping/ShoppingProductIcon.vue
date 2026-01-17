@@ -31,7 +31,7 @@ const LucideIconComponent = computed(() => {
   if (!matchingProduct.value) return null
 
   const iconName = matchingProduct.value.icon
-  // @ts-ignore - Dynamic icon lookup
+  // @ts-expect-error - Dynamic icon lookup
   return LucideIcons[iconName] || null
 })
 

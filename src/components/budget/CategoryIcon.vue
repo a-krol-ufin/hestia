@@ -24,7 +24,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
-const iconMap: Record<BudgetCategory, any> = {
+const iconMap: Record<BudgetCategory, unknown> = {
   // Expense categories
   food: ShoppingBagIcon,
   bills: HomeIcon,

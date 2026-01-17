@@ -3,7 +3,6 @@ import { ref, computed, watch } from 'vue'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { useI18n } from 'vue-i18n'
 import type { BudgetCategory, EntryType, CreateBudgetEntry, ExpenseCategory, IncomeCategory } from '@/types/budget.types'
-import CategoryIcon from './CategoryIcon.vue'
 
 const emit = defineEmits<{
   submit: [entry: CreateBudgetEntry]

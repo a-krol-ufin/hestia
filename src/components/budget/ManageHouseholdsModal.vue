@@ -34,7 +34,7 @@ async function saveEdit(id: string) {
   editingName.value = ''
 }
 
-async function deleteHousehold(id: string, name: string) {
+async function deleteHousehold(id: string) {
   if (confirm(t('budget.confirmDeleteHousehold'))) {
     await budgetStore.deleteHousehold(id)
   }
@@ -147,7 +147,7 @@ function handleBackdropClick(event: MouseEvent) {
                   <PencilIcon class="w-5 h-5" />
                 </button>
                 <button
-                  @click="deleteHousehold(household.id, household.name)"
+                  @click="deleteHousehold(household.id)"
                   :disabled="budgetStore.households.length === 1"
                   class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >

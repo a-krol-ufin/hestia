@@ -28,7 +28,7 @@ const props = withDefaults(defineProps<Props>(), {
   size: 'md',
 })
 
-const iconMap: Record<ShoppingCategory, any> = {
+const iconMap: Record<ShoppingCategory, unknown> = {
   fruits: SparklesIcon,
   vegetables: GlobeAltIcon,
   meat: FireIcon,
