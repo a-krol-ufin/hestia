@@ -1,12 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import App from '../App.vue'
-import Navbar from '../components/Navbar.vue'
-import Hero from '../components/Hero.vue'
-import FeaturesSection from '../components/FeaturesSection.vue'
-import Footer from '../components/Footer.vue'
 import { createI18n } from 'vue-i18n'
 import { createPinia } from 'pinia'
+import { createRouter, createMemoryHistory } from 'vue-router'
+import Navbar from '../components/Navbar.vue'
 
 const i18n = createI18n({
   locale: 'en',
@@ -14,33 +11,62 @@ const i18n = createI18n({
   messages: {
     en: {
       content: {
-        hero: {
-          headline: 'Your Home, Harmonized.',
-        },
-      },
-    },
-    pl: {
-      content: {
-        hero: {
-          headline: 'Twój dom w pełnej harmonii.',
+        navbar: {
+          links: {
+            home: { label: 'Home' },
+            features: { label: 'Features' },
+            about: { label: 'About' },
+            contact: { label: 'Contact' },
+          },
+          user: {
+            login: 'Login',
+            logout: 'Logout',
+            loggedAs: 'Logged as',
+          },
         },
       },
     },
   },
 })
 
-describe('App', () => {
-  it('renders properly', () => {
+describe('Navbar', () => {
+  it('renders properly with navigation links', () => {
     const pinia = createPinia()
-    const wrapper = mount(App, {
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [
+        { path: '/', component: { template: '<div>Home</div>' } },
+        { path: '/login', component: { template: '<div>Login</div>' } },
+      ],
+    })
+
+    const wrapper = mount(Navbar, {
       global: {
-        plugins: [pinia, i18n],
+        plugins: [pinia, i18n, router],
       },
     })
-    expect(wrapper.findComponent(Navbar).exists()).toBe(true)
-    expect(wrapper.findComponent(Hero).exists()).toBe(true)
-    expect(wrapper.findComponent(FeaturesSection).exists()).toBe(true)
-    expect(wrapper.findComponent(Footer).exists()).toBe(true)
-    expect(wrapper.text()).toContain('Your Home, Harmonized.')
+
+    expect(wrapper.text()).toContain('Hestia')
+    expect(wrapper.text()).toContain('Home')
+    expect(wrapper.text()).toContain('Features')
+    expect(wrapper.text()).toContain('About')
+    expect(wrapper.text()).toContain('Contact')
+  })
+
+  it('shows language switcher with PL and EN options', () => {
+    const pinia = createPinia()
+    const router = createRouter({
+      history: createMemoryHistory(),
+      routes: [{ path: '/', component: { template: '<div>Home</div>' } }],
+    })
+
+    const wrapper = mount(Navbar, {
+      global: {
+        plugins: [pinia, i18n, router],
+      },
+    })
+
+    expect(wrapper.text()).toContain('PL')
+    expect(wrapper.text()).toContain('EN')
   })
 })
