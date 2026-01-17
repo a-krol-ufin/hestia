@@ -3,7 +3,7 @@ import { ref, computed, watch } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { PREDEFINED_PRODUCTS } from '@/data/products'
-import ShoppingCategoryIcon from './ShoppingCategoryIcon.vue'
+import ShoppingProductIcon from './ShoppingProductIcon.vue'
 import type { ShoppingCategory, PredefinedProduct } from '@/types/shopping.types'
 
 const { t, locale } = useI18n({ useScope: 'global' })
@@ -147,12 +147,12 @@ watch(showDropdown, (isOpen) => {
         class="w-full px-4 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500"
       />
 
-      <!-- Selected category indicator -->
+      <!-- Selected product/category indicator -->
       <div
-        v-if="selectedCategory && !showDropdown"
+        v-if="name && !showDropdown"
         class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
       >
-        <ShoppingCategoryIcon :category="selectedCategory" size="sm" />
+        <ShoppingProductIcon :product-name="name" :category="selectedCategory" size="sm" />
       </div>
 
       <!-- Autocomplete dropdown -->
@@ -169,7 +169,11 @@ watch(showDropdown, (isOpen) => {
           class="w-full text-left px-4 py-3 hover:bg-orange-50 transition-colors flex items-center gap-3 border-b border-slate-100 last:border-b-0"
           :class="{ 'bg-orange-50': selectedIndex === index }"
         >
-          <ShoppingCategoryIcon :category="product.category" size="md" />
+          <ShoppingProductIcon
+            :product-name="locale === 'pl' ? product.name : product.nameEn"
+            :category="product.category"
+            size="md"
+          />
           <div class="flex-1">
             <div class="font-medium text-slate-800">
               {{ locale === 'pl' ? product.name : product.nameEn }}
@@ -188,7 +192,7 @@ watch(showDropdown, (isOpen) => {
           class="w-full text-left px-4 py-3 hover:bg-orange-50 transition-colors flex items-center gap-3 border-t border-slate-200"
           :class="{ 'bg-orange-50': selectedIndex === filteredProducts.length }"
         >
-          <ShoppingCategoryIcon category="other" size="md" />
+          <ShoppingProductIcon product-name="" category="other" size="md" />
           <div class="flex-1">
             <div class="font-medium text-slate-800">
               {{ name }}

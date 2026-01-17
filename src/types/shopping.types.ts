@@ -31,6 +31,7 @@ export interface PredefinedProduct {
   nameEn: string
   category: ShoppingCategory
   defaultUnit?: string
+  icon: string
 }
 
 export interface ShoppingItem {

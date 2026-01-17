@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { TrashIcon } from '@heroicons/vue/24/outline'
-import ShoppingCategoryIcon from './ShoppingCategoryIcon.vue'
+import ShoppingProductIcon from './ShoppingProductIcon.vue'
 import type { ShoppingItem } from '@/types/shopping.types'
 
 interface Props {
@@ -29,11 +29,8 @@ const emit = defineEmits<{
         @change="emit('toggle', item.id)"
         class="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 cursor-pointer"
       />
-      <div
-        v-if="item.category"
-        class="flex-shrink-0"
-      >
-        <ShoppingCategoryIcon :category="item.category" size="md" />
+      <div class="flex-shrink-0">
+        <ShoppingProductIcon :product-name="item.name" :category="item.category" size="md" />
       </div>
       <div>
         <p
