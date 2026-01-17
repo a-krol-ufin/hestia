@@ -8,6 +8,7 @@ import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import ShoppingItem from '@/components/shopping/ShoppingItem.vue'
 import AddItemForm from '@/components/shopping/AddItemForm.vue'
+import type { ShoppingCategory } from '@/types/shopping.types'
 
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
@@ -17,7 +18,7 @@ onMounted(() => {
   shoppingStore.fetchItems()
 })
 
-function handleAddItem(item: { name: string; quantity: number }) {
+function handleAddItem(item: { name: string; quantity: number; unit?: string; category?: ShoppingCategory }) {
   shoppingStore.addItem(item)
 }
 
