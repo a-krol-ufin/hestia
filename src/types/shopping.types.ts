@@ -26,11 +26,13 @@ export type ShoppingCategory =
   | 'household'
   | 'other'
 
+export type ShoppingUnit = 'kg' | 'g' | 'l' | 'ml' | 'szt' | 'op'
+
 export interface PredefinedProduct {
   name: string
   nameEn: string
   category: ShoppingCategory
-  defaultUnit?: string
+  defaultUnit?: ShoppingUnit
   icon: string
 }
 
@@ -38,7 +40,7 @@ export interface ShoppingItem {
   id: string
   name: string
   quantity: number
-  unit?: string
+  unit?: ShoppingUnit
   category?: ShoppingCategory
   checked: boolean
   user: string
@@ -49,14 +51,14 @@ export interface ShoppingItem {
 export interface CreateShoppingItem {
   name: string
   quantity: number
-  unit?: string
+  unit?: ShoppingUnit
   category?: ShoppingCategory
 }
 
 export interface UpdateShoppingItem {
   name?: string
   quantity?: number
-  unit?: string
+  unit?: ShoppingUnit
   category?: ShoppingCategory
   checked?: boolean
 }

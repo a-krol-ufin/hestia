@@ -81,6 +81,14 @@
     "addButton": "Add",
     "empty": "Your shopping list is empty",
     "back": "Back to Dashboard",
+    "units": {
+      "kg": "kg",
+      "g": "g",
+      "l": "l",
+      "ml": "ml",
+      "szt": "pcs",
+      "op": "pkg"
+    },
     "categories": {
       "fruits": "Fruits",
       "vegetables": "Vegetables",

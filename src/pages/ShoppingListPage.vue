@@ -8,7 +8,7 @@ import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import ShoppingItem from '@/components/shopping/ShoppingItem.vue'
 import AddItemForm from '@/components/shopping/AddItemForm.vue'
-import type { ShoppingCategory } from '@/types/shopping.types'
+import type { ShoppingCategory, ShoppingUnit } from '@/types/shopping.types'
 
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
@@ -18,8 +18,12 @@ onMounted(() => {
   shoppingStore.fetchItems()
 })
 
-function handleAddItem(item: { name: string; quantity: number; unit?: string; category?: ShoppingCategory }) {
+function handleAddItem(item: { name: string; quantity: number; unit?: ShoppingUnit; category?: ShoppingCategory }) {
   shoppingStore.addItem(item)
+}
+
+function handleUpdateItem(id: string, data: any) {
+  shoppingStore.updateItem(id, data)
 }
 
 function handleToggleItem(id: string) {
@@ -76,6 +80,7 @@ function goBack() {
             :key="item.id"
             :item="item"
             @toggle="handleToggleItem"
+            @update="handleUpdateItem"
             @delete="handleDeleteItem"
           />
         </div>

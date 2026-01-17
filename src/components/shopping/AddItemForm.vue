@@ -4,19 +4,22 @@ import { useI18n } from 'vue-i18n'
 import { PlusIcon } from '@heroicons/vue/24/outline'
 import { PREDEFINED_PRODUCTS } from '@/data/products'
 import ShoppingProductIcon from './ShoppingProductIcon.vue'
-import type { ShoppingCategory, PredefinedProduct } from '@/types/shopping.types'
+import type { ShoppingCategory, ShoppingUnit, PredefinedProduct } from '@/types/shopping.types'
 
 const { t, locale } = useI18n({ useScope: 'global' })
 
 const name = ref('')
 const quantity = ref(1)
+const selectedUnit = ref<ShoppingUnit>('szt')
 const selectedCategory = ref<ShoppingCategory | undefined>()
 const showDropdown = ref(false)
 const selectedIndex = ref(-1)
 const inputRef = ref<HTMLInputElement>()
 
+const AVAILABLE_UNITS: ShoppingUnit[] = ['kg', 'g', 'l', 'ml', 'szt', 'op']
+
 const emit = defineEmits<{
-  add: [item: { name: string; quantity: number; unit?: string; category?: ShoppingCategory }]
+  add: [item: { name: string; quantity: number; unit?: ShoppingUnit; category?: ShoppingCategory }]
 }>()
 
 // Filter products based on input
@@ -56,8 +59,9 @@ function selectProduct(product: PredefinedProduct) {
   showDropdown.value = false
   selectedIndex.value = -1
 
-  // Set default quantity to 1 if unit is specified
+  // Set default unit and quantity
   if (product.defaultUnit) {
+    selectedUnit.value = product.defaultUnit
     quantity.value = 1
   }
 }
@@ -97,21 +101,16 @@ function handleKeydown(event: KeyboardEvent) {
 function handleSubmit() {
   if (!name.value.trim()) return
 
-  // Find matching product to get default unit
-  const matchingProduct = PREDEFINED_PRODUCTS.find((p) => {
-    const productName = locale.value === 'pl' ? p.name : p.nameEn
-    return productName.toLowerCase() === name.value.trim().toLowerCase()
-  })
-
   emit('add', {
     name: name.value.trim(),
     quantity: quantity.value,
-    unit: matchingProduct?.defaultUnit,
-    category: selectedCategory.value || matchingProduct?.category,
+    unit: selectedUnit.value,
+    category: selectedCategory.value,
   })
 
   name.value = ''
   quantity.value = 1
+  selectedUnit.value = 'szt'
   selectedCategory.value = undefined
   showDropdown.value = false
   selectedIndex.value = -1
@@ -208,9 +207,18 @@ watch(showDropdown, (isOpen) => {
     <input
       v-model.number="quantity"
       type="number"
-      min="1"
+      min="0.01"
+      step="0.01"
       class="w-20 px-3 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 text-center"
     />
+    <select
+      v-model="selectedUnit"
+      class="px-3 py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-200 focus:border-orange-500 bg-white"
+    >
+      <option v-for="unit in AVAILABLE_UNITS" :key="unit" :value="unit">
+        {{ t(`shopping.units.${unit}`) }}
+      </option>
+    </select>
     <button
       type="submit"
       :disabled="!name.trim()"

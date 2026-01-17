@@ -81,6 +81,14 @@
     "addButton": "Dodaj",
     "empty": "Twoja lista zakupów jest pusta",
     "back": "Powrót do panelu",
+    "units": {
+      "kg": "kg",
+      "g": "g",
+      "l": "l",
+      "ml": "ml",
+      "szt": "szt",
+      "op": "op"
+    },
     "categories": {
       "fruits": "Owoce",
       "vegetables": "Warzywa",
