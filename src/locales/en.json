@@ -19,6 +19,7 @@
         "login": "Sign In",
         "logout": "Sign Out",
         "loggedAs": "Logged in as",
+        "dashboard": "Dashboard",
         "profile": "My Profile"
       }
     },
@@ -232,6 +233,10 @@
     "back": "Back to Dashboard",
     "saving": "Saving...",
     "cancel": "Cancel",
+    "email": {
+      "title": "Email Address",
+      "description": "Your email address used for login"
+    },
     "avatar": {
       "title": "Profile Picture",
       "description": "Upload a photo to personalize your account",

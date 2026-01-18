@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', () => {
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
-  const isAuthenticated = computed(() => authService.isAuthenticated() && user.value !== null)
+  const isAuthenticated = computed(() => user.value !== null)
 
   async function login(credentials: LoginCredentials): Promise<boolean> {
     isLoading.value = true
@@ -53,7 +53,7 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function initAuthListener(): void {
-    authService.onAuthChange((isValid, currentUser) => {
+    authService.onAuthChange((_isValid, currentUser) => {
       user.value = currentUser
     })
   }

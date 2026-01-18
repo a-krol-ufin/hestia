@@ -19,6 +19,7 @@
         "login": "Zaloguj się",
         "logout": "Wyloguj się",
         "loggedAs": "Zalogowany jako",
+        "dashboard": "Panel główny",
         "profile": "Mój profil"
       }
     },
@@ -232,6 +233,10 @@
     "back": "Powrót do panelu",
     "saving": "Zapisywanie...",
     "cancel": "Anuluj",
+    "email": {
+      "title": "Adres email",
+      "description": "Twój adres email używany do logowania"
+    },
     "avatar": {
       "title": "Zdjęcie profilowe",
       "description": "Dodaj zdjęcie, aby spersonalizować swoje konto",

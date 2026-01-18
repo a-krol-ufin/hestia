@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
 import { useAuthStore } from '@/stores/auth'
-import { UserCircleIcon, ArrowRightOnRectangleIcon, Bars3Icon, XMarkIcon, Cog6ToothIcon } from '@heroicons/vue/24/outline'
+import { UserCircleIcon, ArrowRightOnRectangleIcon, Bars3Icon, XMarkIcon, Cog6ToothIcon, Squares2X2Icon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
@@ -40,6 +40,11 @@ function handleLogout() {
   authStore.logout()
   closeDropdown()
   router.push('/')
+}
+
+function navigateToDashboard() {
+  closeDropdown()
+  router.push('/dashboard')
 }
 
 function navigateToProfile() {
@@ -133,6 +138,13 @@ function toggleMobileMenu() {
                 <p class="text-sm text-gray-500">{{ t('content.navbar.user.loggedAs') }}</p>
                 <p class="text-sm font-medium text-slate-800 truncate">{{ authStore.user?.name || authStore.user?.email }}</p>
               </div>
+              <button
+                @click="navigateToDashboard"
+                class="w-full px-4 py-2 text-left text-gray-600 hover:bg-orange-50 hover:text-orange-500 transition-colors flex items-center space-x-2"
+              >
+                <Squares2X2Icon class="w-5 h-5" />
+                <span>{{ t('content.navbar.user.dashboard') }}</span>
+              </button>
               <button
                 @click="navigateToProfile"
                 class="w-full px-4 py-2 text-left text-gray-600 hover:bg-orange-50 hover:text-orange-500 transition-colors flex items-center space-x-2"
