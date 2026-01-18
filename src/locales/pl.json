@@ -18,7 +18,8 @@
       "user": {
         "login": "Zaloguj się",
         "logout": "Wyloguj się",
-        "loggedAs": "Zalogowany jako"
+        "loggedAs": "Zalogowany jako",
+        "profile": "Mój profil"
       }
     },
     "hero": {
@@ -225,5 +226,48 @@
     "title": "Strona nie znaleziona",
     "description": "Ups! Strona, której szukasz, nie istnieje.",
     "backButton": "Wróć do strony głównej"
+  },
+  "profile": {
+    "title": "Twój profil",
+    "back": "Powrót do panelu",
+    "saving": "Zapisywanie...",
+    "cancel": "Anuluj",
+    "avatar": {
+      "title": "Zdjęcie profilowe",
+      "description": "Dodaj zdjęcie, aby spersonalizować swoje konto",
+      "save": "Zapisz zdjęcie",
+      "remove": "Usuń zdjęcie",
+      "success": "Zdjęcie profilowe zostało zaktualizowane",
+      "removed": "Zdjęcie profilowe zostało usunięte",
+      "errorInvalidType": "Wybierz plik graficzny",
+      "errorTooLarge": "Zdjęcie musi być mniejsze niż 5MB",
+      "errorUpload": "Nie udało się przesłać zdjęcia",
+      "errorRemove": "Nie udało się usunąć zdjęcia",
+      "helpText": "Obsługiwane formaty: JPG, PNG, GIF (max 5MB)"
+    },
+    "name": {
+      "title": "Dane osobowe",
+      "description": "Zaktualizuj swoją wyświetlaną nazwę",
+      "label": "Nazwa wyświetlana",
+      "placeholder": "Wprowadź swoje imię",
+      "save": "Zapisz zmiany",
+      "success": "Nazwa została zaktualizowana",
+      "errorEmpty": "Nazwa nie może być pusta",
+      "errorUpdate": "Nie udało się zaktualizować nazwy"
+    },
+    "password": {
+      "title": "Zmiana hasła",
+      "description": "Zaktualizuj hasło do swojego konta",
+      "currentLabel": "Aktualne hasło",
+      "currentPlaceholder": "Wprowadź aktualne hasło",
+      "newLabel": "Nowe hasło",
+      "newPlaceholder": "Wprowadź nowe hasło",
+      "confirmLabel": "Potwierdź nowe hasło",
+      "confirmPlaceholder": "Potwierdź nowe hasło",
+      "save": "Zmień hasło",
+      "success": "Hasło zostało zmienione",
+      "errorTooShort": "Hasło musi mieć co najmniej {min} znaków",
+      "errorChange": "Nie udało się zmienić hasła"
+    }
   }
 }
