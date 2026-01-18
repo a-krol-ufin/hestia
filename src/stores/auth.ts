@@ -1,14 +1,14 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { authService } from '@/services/auth.service'
-import type { AuthUser, LoginCredentials, RegisterCredentials } from '@/types/auth.types'
+import type { AuthUser, LoginCredentials, RegisterCredentials, UpdateProfileData, ChangePasswordData } from '@/types/auth.types'
 
 export const useAuthStore = defineStore('auth', () => {
   const user = ref<AuthUser | null>(authService.getCurrentUser())
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
-  const isAuthenticated = computed(() => authService.isAuthenticated() && user.value !== null)
+  const isAuthenticated = computed(() => user.value !== null)
 
   async function login(credentials: LoginCredentials): Promise<boolean> {
     isLoading.value = true
@@ -53,9 +53,45 @@ export const useAuthStore = defineStore('auth', () => {
   }
 
   function initAuthListener(): void {
-    authService.onAuthChange((isValid, currentUser) => {
+    authService.onAuthChange((_isValid, currentUser) => {
       user.value = currentUser
     })
+  }
+
+  async function updateProfile(data: UpdateProfileData): Promise<boolean> {
+    if (!user.value) return false
+
+    isLoading.value = true
+    error.value = null
+
+    const response = await authService.updateProfile(user.value.id, data)
+
+    if (response.success) {
+      user.value = authService.getCurrentUser()
+    } else {
+      error.value = response.error || null
+    }
+
+    isLoading.value = false
+    return response.success
+  }
+
+  async function changePassword(data: ChangePasswordData): Promise<boolean> {
+    isLoading.value = true
+    error.value = null
+
+    const response = await authService.changePassword(data)
+
+    if (!response.success) {
+      error.value = response.error || null
+    }
+
+    isLoading.value = false
+    return response.success
+  }
+
+  function getAvatarUrl(): string | null {
+    return authService.getAvatarUrl(user.value)
   }
 
   return {
@@ -68,5 +104,8 @@ export const useAuthStore = defineStore('auth', () => {
     logout,
     clearError,
     initAuthListener,
+    updateProfile,
+    changePassword,
+    getAvatarUrl,
   }
 })

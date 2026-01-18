@@ -21,3 +21,14 @@ export interface AuthResponse {
   success: boolean
   error?: string
 }
+
+export interface UpdateProfileData {
+  name?: string
+  avatar?: File | null
+}
+
+export interface ChangePasswordData {
+  oldPassword: string
+  password: string
+  passwordConfirm: string
+}

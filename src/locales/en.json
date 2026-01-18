@@ -18,7 +18,9 @@
       "user": {
         "login": "Sign In",
         "logout": "Sign Out",
-        "loggedAs": "Logged in as"
+        "loggedAs": "Logged in as",
+        "dashboard": "Dashboard",
+        "profile": "My Profile"
       }
     },
     "hero": {
@@ -225,5 +227,52 @@
     "title": "Page Not Found",
     "description": "Oops! The page you are looking for does not exist.",
     "backButton": "Go Home"
+  },
+  "profile": {
+    "title": "Your Profile",
+    "back": "Back to Dashboard",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "email": {
+      "title": "Email Address",
+      "description": "Your email address used for login"
+    },
+    "avatar": {
+      "title": "Profile Picture",
+      "description": "Upload a photo to personalize your account",
+      "save": "Save Photo",
+      "remove": "Remove Photo",
+      "success": "Profile picture updated successfully",
+      "removed": "Profile picture removed",
+      "errorInvalidType": "Please select an image file",
+      "errorTooLarge": "Image must be smaller than 5MB",
+      "errorUpload": "Failed to upload image",
+      "errorRemove": "Failed to remove image",
+      "helpText": "Supported formats: JPG, PNG, GIF (max 5MB)"
+    },
+    "name": {
+      "title": "Personal Information",
+      "description": "Update your display name",
+      "label": "Display Name",
+      "placeholder": "Enter your name",
+      "save": "Save Changes",
+      "success": "Name updated successfully",
+      "errorEmpty": "Name cannot be empty",
+      "errorUpdate": "Failed to update name"
+    },
+    "password": {
+      "title": "Change Password",
+      "description": "Update your account password",
+      "currentLabel": "Current Password",
+      "currentPlaceholder": "Enter current password",
+      "newLabel": "New Password",
+      "newPlaceholder": "Enter new password",
+      "confirmLabel": "Confirm New Password",
+      "confirmPlaceholder": "Confirm new password",
+      "save": "Change Password",
+      "success": "Password changed successfully",
+      "errorTooShort": "Password must be at least {min} characters",
+      "errorChange": "Failed to change password"
+    }
   }
 }

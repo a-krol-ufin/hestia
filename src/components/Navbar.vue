@@ -4,7 +4,7 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAppStore } from '@/stores/app'
 import { useAuthStore } from '@/stores/auth'
-import { UserCircleIcon, ArrowRightOnRectangleIcon, Bars3Icon, XMarkIcon } from '@heroicons/vue/24/outline'
+import { UserCircleIcon, ArrowRightOnRectangleIcon, Bars3Icon, XMarkIcon, Cog6ToothIcon, Squares2X2Icon } from '@heroicons/vue/24/outline'
 
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
@@ -15,6 +15,7 @@ const isDropdownOpen = ref(false)
 const isMobileMenuOpen = ref(false)
 
 const currentLocale = computed(() => appStore.language)
+const avatarUrl = computed(() => authStore.getAvatarUrl())
 
 const navLinks = [
   { id: 'home', href: '/' },
@@ -39,6 +40,16 @@ function handleLogout() {
   authStore.logout()
   closeDropdown()
   router.push('/')
+}
+
+function navigateToDashboard() {
+  closeDropdown()
+  router.push('/dashboard')
+}
+
+function navigateToProfile() {
+  closeDropdown()
+  router.push('/profile')
 }
 
 function setLanguage(lang: string) {
@@ -109,7 +120,13 @@ function toggleMobileMenu() {
               @click="toggleDropdown"
               class="flex items-center space-x-2 text-gray-600 hover:text-orange-500 transition-colors"
             >
-              <UserCircleIcon class="w-8 h-8" />
+              <img
+                v-if="avatarUrl"
+                :src="avatarUrl"
+                alt="Avatar"
+                class="w-8 h-8 rounded-full object-cover border-2 border-gray-200"
+              />
+              <UserCircleIcon v-else class="w-8 h-8" />
             </button>
 
             <!-- Dropdown menu -->
@@ -119,8 +136,22 @@ function toggleMobileMenu() {
             >
               <div class="px-4 py-2 border-b border-gray-100">
                 <p class="text-sm text-gray-500">{{ t('content.navbar.user.loggedAs') }}</p>
-                <p class="text-sm font-medium text-slate-800 truncate">{{ authStore.user?.email }}</p>
+                <p class="text-sm font-medium text-slate-800 truncate">{{ authStore.user?.name || authStore.user?.email }}</p>
               </div>
+              <button
+                @click="navigateToDashboard"
+                class="w-full px-4 py-2 text-left text-gray-600 hover:bg-orange-50 hover:text-orange-500 transition-colors flex items-center space-x-2"
+              >
+                <Squares2X2Icon class="w-5 h-5" />
+                <span>{{ t('content.navbar.user.dashboard') }}</span>
+              </button>
+              <button
+                @click="navigateToProfile"
+                class="w-full px-4 py-2 text-left text-gray-600 hover:bg-orange-50 hover:text-orange-500 transition-colors flex items-center space-x-2"
+              >
+                <Cog6ToothIcon class="w-5 h-5" />
+                <span>{{ t('content.navbar.user.profile') }}</span>
+              </button>
               <button
                 @click="handleLogout"
                 class="w-full px-4 py-2 text-left text-gray-600 hover:bg-orange-50 hover:text-orange-500 transition-colors flex items-center space-x-2"
