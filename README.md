@@ -1,6 +1,7 @@
 # Hestia
 
 Hestia is a comprehensive home management application designed to streamline daily household tasks. It currently facilitates shopping list management, budget planning, and payment reminders, with an extensible architecture intended to support a wide range of future functionalities.
+<img width="1504" height="801" alt="image" src="https://github.com/user-attachments/assets/0db1c96a-857c-4c0c-aea6-490674687b0e" />
 
 ## Technology Stack
 
