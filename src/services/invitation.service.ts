@@ -125,7 +125,10 @@ class InvitationService {
     try {
       const userId = pb.authStore.record?.id
       const userEmail = pb.authStore.record?.email
-      if (!userId) return false
+      if (!userId) {
+        console.error('No authenticated user')
+        return false
+      }
 
       // Get the invitation first
       const invitation = await this.getInvitation(invitationId)
@@ -143,21 +146,33 @@ class InvitationService {
         return false
       }
 
-      // Update invitation status and set invitee if not set
+      // IMPORTANT: Create household_member FIRST, before updating invitation status
+      // This ensures user is added to household before marking invitation as accepted
+      try {
+        await pb.collection('household_members').create({
+          household: invitation.household,
+          user: userId,
+          role: invitation.role as MemberRole,
+          joined_at: new Date().toISOString(),
+        })
+        console.log('Successfully created household_member')
+      } catch (memberError: unknown) {
+        // Check if it's a duplicate (user already member)
+        if (memberError && typeof memberError === 'object' && 'status' in memberError && memberError.status === 400) {
+          console.warn('User might already be a member of this household, continuing...')
+        } else {
+          console.error('Failed to create household_member:', memberError)
+          throw memberError // Re-throw to prevent marking invitation as accepted
+        }
+      }
+
+      // Now update invitation status
       await pb.collection(this.collection).update(invitationId, {
         status: 'accepted' as InvitationStatus,
         invitee: userId, // Set invitee to current user
       })
 
-      // Create household_member record
-      await pb.collection('household_members').create({
-        household: invitation.household,
-        user: userId,
-        role: invitation.role as MemberRole,
-        joined_at: new Date().toISOString(),
-      })
-
-      // Create notification for the inviter
+      // Create notification for the inviter (optional, don't fail if this fails)
       try {
         const userName = pb.authStore.record?.name || pb.authStore.record?.email || 'Someone'
         await pb.collection('household_notifications').create({

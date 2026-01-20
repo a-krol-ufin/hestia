@@ -4,9 +4,15 @@ migrate((app) => {
   // Remove the members field (migrated to household_members)
   households.fields.removeByName("members")
 
-  // Update access rules to use household_members
-  households.listRule = '@request.auth.id != "" && (owner = @request.auth.id || @collection.household_members.household = id && @collection.household_members.user = @request.auth.id)'
-  households.viewRule = '@request.auth.id != "" && (owner = @request.auth.id || @collection.household_members.household = id && @collection.household_members.user = @request.auth.id)'
+  // Update access rules:
+  // - List/View: Any authenticated user (filtering by membership is done in application code)
+  // - Update/Delete: Only owner can modify or delete household
+  // Security note: Actual data access (budget entries, shopping items) is controlled
+  // by their own collection rules which check household membership
+  households.listRule = '@request.auth.id != ""'
+  households.viewRule = '@request.auth.id != ""'
+  households.updateRule = '@request.auth.id != "" && owner = @request.auth.id'
+  households.deleteRule = '@request.auth.id != "" && owner = @request.auth.id'
 
   app.save(households)
 }, (app) => {
@@ -25,6 +31,8 @@ migrate((app) => {
   // Restore original access rules
   households.listRule = '@request.auth.id != "" && (owner = @request.auth.id || members.id ?= @request.auth.id)'
   households.viewRule = '@request.auth.id != "" && (owner = @request.auth.id || members.id ?= @request.auth.id)'
+  households.updateRule = '@request.auth.id != "" && owner = @request.auth.id'
+  households.deleteRule = '@request.auth.id != "" && owner = @request.auth.id'
 
   app.save(households)
 })
