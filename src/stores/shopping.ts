@@ -5,17 +5,33 @@ import type { ShoppingItem, CreateShoppingItem, UpdateShoppingItem } from '@/typ
 
 export const useShoppingStore = defineStore('shopping', () => {
   const items = ref<ShoppingItem[]>([])
+  const currentHouseholdId = ref<string | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
-  async function fetchItems() {
+  function setCurrentHousehold(householdId: string | null) {
+    currentHouseholdId.value = householdId
+  }
+
+  async function fetchItems(householdId?: string) {
+    const targetHouseholdId = householdId || currentHouseholdId.value
+    if (!targetHouseholdId) {
+      error.value = 'No household selected'
+      return
+    }
+
     isLoading.value = true
     error.value = null
-    items.value = await shoppingService.getItems()
+    items.value = await shoppingService.getItems(targetHouseholdId)
     isLoading.value = false
   }
 
   async function addItem(item: CreateShoppingItem) {
+    if (!currentHouseholdId.value) {
+      error.value = 'No household selected'
+      return
+    }
+
     error.value = null
 
     const normalizedName = item.name.trim().toLowerCase()
@@ -35,7 +51,7 @@ export const useShoppingStore = defineStore('shopping', () => {
         error.value = 'Failed to update item quantity'
       }
     } else {
-      const newItem = await shoppingService.addItem(item)
+      const newItem = await shoppingService.addItem(currentHouseholdId.value, item)
       if (newItem) {
         items.value.unshift(newItem)
       } else {
@@ -87,8 +103,10 @@ export const useShoppingStore = defineStore('shopping', () => {
 
   return {
     items,
+    currentHouseholdId,
     isLoading,
     error,
+    setCurrentHousehold,
     fetchItems,
     addItem,
     updateItem,

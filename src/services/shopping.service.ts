@@ -4,9 +4,12 @@ import type { ShoppingItem, CreateShoppingItem, UpdateShoppingItem } from '@/typ
 class ShoppingService {
   private collection = 'shopping_items'
 
-  async getItems(): Promise<ShoppingItem[]> {
+  async getItems(householdId: string): Promise<ShoppingItem[]> {
     try {
-      const records = await pb.collection(this.collection).getFullList<ShoppingItem>()
+      const records = await pb.collection(this.collection).getFullList<ShoppingItem>({
+        filter: `household = "${householdId}"`,
+        sort: '-created',
+      })
       return records
     } catch (error) {
       console.error('Failed to fetch shopping items:', error)
@@ -14,12 +17,13 @@ class ShoppingService {
     }
   }
 
-  async addItem(item: CreateShoppingItem): Promise<ShoppingItem | null> {
+  async addItem(householdId: string, item: CreateShoppingItem): Promise<ShoppingItem | null> {
     try {
       const record = await pb.collection(this.collection).create<ShoppingItem>({
         ...item,
         checked: false,
-        user: pb.authStore.record?.id,
+        household: householdId,
+        added_by: pb.authStore.record?.id,
       })
       return record
     } catch (error) {

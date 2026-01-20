@@ -1,4 +1,5 @@
 import pb from './pocketbase'
+import { memberService } from './member.service'
 import type {
   Household,
   CreateHousehold,
@@ -43,8 +44,11 @@ class BudgetService {
       const record = await pb.collection(this.householdsCollection).create<Household>({
         ...data,
         owner: userId,
-        members: [userId, ...(data.members || [])],
       })
+
+      // Create household_member record for owner
+      await memberService.createMemberForOwner(record.id)
+
       return record
     } catch (error) {
       console.error('Failed to create household:', error)
