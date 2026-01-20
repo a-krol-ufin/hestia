@@ -2,7 +2,8 @@
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
 import { useBudgetStore } from '@/stores/budget'
-import { XMarkIcon, HomeIcon, TrashIcon, PencilIcon, PlusIcon } from '@heroicons/vue/24/outline'
+import { XMarkIcon, HomeIcon, TrashIcon, PencilIcon, PlusIcon, UsersIcon } from '@heroicons/vue/24/outline'
+import HouseholdMembersModal from './HouseholdMembersModal.vue'
 
 const emit = defineEmits<{
   close: []
@@ -15,6 +16,18 @@ const editingId = ref<string | null>(null)
 const editingName = ref('')
 const newHouseholdName = ref('')
 const showCreateForm = ref(false)
+const showMembersModal = ref(false)
+const selectedHousehold = ref<{ id: string; name: string; owner: string } | null>(null)
+
+function openMembersModal(household: { id: string; name: string; owner: string }) {
+  selectedHousehold.value = household
+  showMembersModal.value = true
+}
+
+function closeMembersModal() {
+  showMembersModal.value = false
+  selectedHousehold.value = null
+}
 
 function startEdit(id: string, name: string) {
   editingId.value = id
@@ -141,6 +154,13 @@ function handleBackdropClick(event: MouseEvent) {
               </div>
               <div class="flex items-center gap-2">
                 <button
+                  @click="openMembersModal(household)"
+                  class="p-2 text-slate-600 hover:bg-orange-50 hover:text-orange-500 rounded-lg transition-colors"
+                  :title="t('members.title')"
+                >
+                  <UsersIcon class="w-5 h-5" />
+                </button>
+                <button
                   @click="startEdit(household.id, household.name)"
                   class="p-2 text-slate-600 hover:bg-slate-200 rounded-lg transition-colors"
                 >
@@ -194,5 +214,14 @@ function handleBackdropClick(event: MouseEvent) {
         </button>
       </div>
     </div>
+
+    <!-- Members Modal -->
+    <HouseholdMembersModal
+      v-if="showMembersModal && selectedHousehold"
+      :household-id="selectedHousehold.id"
+      :household-name="selectedHousehold.name"
+      :owner-id="selectedHousehold.owner"
+      @close="closeMembersModal"
+    />
   </div>
 </template>
