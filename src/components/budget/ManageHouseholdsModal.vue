@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useI18n } from 'vue-i18n'
-import { useBudgetStore } from '@/stores/budget'
-import { XMarkIcon, HomeIcon, TrashIcon, PencilIcon, PlusIcon, UsersIcon } from '@heroicons/vue/24/outline'
+import { useHouseholdStore } from '@/stores/household'
+import { XMarkIcon, HomeIcon, TrashIcon, PencilIcon, PlusIcon, UsersIcon, CheckIcon } from '@heroicons/vue/24/outline'
 import HouseholdMembersModal from './HouseholdMembersModal.vue'
 
 const emit = defineEmits<{
@@ -10,7 +10,11 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n({ useScope: 'global' })
-const budgetStore = useBudgetStore()
+const householdStore = useHouseholdStore()
+
+function selectHousehold(id: string) {
+  householdStore.selectHousehold(id)
+}
 
 const editingId = ref<string | null>(null)
 const editingName = ref('')
@@ -42,21 +46,21 @@ function cancelEdit() {
 async function saveEdit(id: string) {
   if (!editingName.value.trim()) return
 
-  await budgetStore.updateHousehold(id, { name: editingName.value })
+  await householdStore.updateHousehold(id, { name: editingName.value })
   editingId.value = null
   editingName.value = ''
 }
 
 async function deleteHousehold(id: string) {
   if (confirm(t('budget.confirmDeleteHousehold'))) {
-    await budgetStore.deleteHousehold(id)
+    await householdStore.deleteHousehold(id)
   }
 }
 
 async function createHousehold() {
   if (!newHouseholdName.value.trim()) return
 
-  await budgetStore.createHousehold({ name: newHouseholdName.value })
+  await householdStore.createHousehold({ name: newHouseholdName.value })
   newHouseholdName.value = ''
   showCreateForm.value = false
 }
@@ -130,29 +134,42 @@ function handleBackdropClick(event: MouseEvent) {
         </button>
 
         <!-- Households list -->
-        <div v-if="budgetStore.households.length === 0" class="text-center py-12 text-slate-500">
+        <div v-if="householdStore.households.length === 0" class="text-center py-12 text-slate-500">
           {{ t('budget.noHouseholds') }}
         </div>
 
         <div v-else class="space-y-3">
           <div
-            v-for="household in budgetStore.households"
+            v-for="household in householdStore.households"
             :key="household.id"
-            class="flex items-center gap-3 p-4 bg-slate-50 rounded-lg border border-slate-200"
+            :class="[
+              'flex items-center gap-3 p-4 rounded-lg border transition-colors',
+              household.id === householdStore.currentHousehold?.id
+                ? 'bg-orange-50 border-orange-300'
+                : 'bg-slate-50 border-slate-200 hover:border-orange-200 cursor-pointer'
+            ]"
+            @click="editingId !== household.id && selectHousehold(household.id)"
           >
-            <HomeIcon class="w-6 h-6 text-slate-600 flex-shrink-0" />
+            <HomeIcon :class="[
+              'w-6 h-6 flex-shrink-0',
+              household.id === householdStore.currentHousehold?.id ? 'text-orange-500' : 'text-slate-600'
+            ]" />
 
             <!-- Display mode -->
             <div v-if="editingId !== household.id" class="flex-1 flex items-center justify-between">
-              <div>
-                <p class="font-semibold text-slate-800">
+              <div class="flex items-center gap-2">
+                <p :class="[
+                  'font-semibold',
+                  household.id === householdStore.currentHousehold?.id ? 'text-orange-700' : 'text-slate-800'
+                ]">
                   {{ household.name }}
                 </p>
-                <p v-if="household.id === budgetStore.currentHousehold?.id" class="text-xs text-orange-600 font-medium">
-                  {{ t('budget.household') }} ({{ t('budget.onBudget').toLowerCase() }})
-                </p>
+                <span v-if="household.id === householdStore.currentHousehold?.id" class="flex items-center gap-1 text-xs text-orange-600 font-medium bg-orange-100 px-2 py-0.5 rounded-full">
+                  <CheckIcon class="w-3 h-3" />
+                  {{ t('budget.active') }}
+                </span>
               </div>
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-2" @click.stop>
                 <button
                   @click="openMembersModal(household)"
                   class="p-2 text-slate-600 hover:bg-orange-50 hover:text-orange-500 rounded-lg transition-colors"
@@ -168,7 +185,7 @@ function handleBackdropClick(event: MouseEvent) {
                 </button>
                 <button
                   @click="deleteHousehold(household.id)"
-                  :disabled="budgetStore.households.length === 1"
+                  :disabled="householdStore.households.length === 1"
                   class="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
                   <TrashIcon class="w-5 h-5" />

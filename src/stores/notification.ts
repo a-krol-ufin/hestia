@@ -90,23 +90,24 @@ export const useNotificationStore = defineStore('notification', () => {
   async function subscribe() {
     if (unsubscribe) {
       unsubscribe()
+      unsubscribe = null
     }
 
-    try {
-      unsubscribe = await notificationService.subscribe((event) => {
-        if (event.action === 'create') {
-          notifications.value.unshift(event.record)
-        } else if (event.action === 'update') {
-          const index = notifications.value.findIndex(n => n.id === event.record.id)
-          if (index !== -1) {
-            notifications.value[index] = event.record
-          }
-        } else if (event.action === 'delete') {
-          notifications.value = notifications.value.filter(n => n.id !== event.record.id)
+    const unsub = await notificationService.subscribe((event) => {
+      if (event.action === 'create') {
+        notifications.value.unshift(event.record)
+      } else if (event.action === 'update') {
+        const index = notifications.value.findIndex(n => n.id === event.record.id)
+        if (index !== -1) {
+          notifications.value[index] = event.record
         }
-      })
-    } catch (e) {
-      console.error('Failed to subscribe to notifications:', e)
+      } else if (event.action === 'delete') {
+        notifications.value = notifications.value.filter(n => n.id !== event.record.id)
+      }
+    })
+
+    if (unsub) {
+      unsubscribe = unsub
     }
   }
 

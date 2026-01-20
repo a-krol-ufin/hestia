@@ -74,6 +74,12 @@
       "tasks": {
         "title": "Tasks",
         "description": "Manage household tasks"
+      },
+      "households": {
+        "title": "Households",
+        "description": "Create a household to start managing your home",
+        "current": "Current: {name}",
+        "manage": "Manage"
       }
     }
   },
@@ -182,6 +188,7 @@
     "rename": "Rename",
     "delete": "Delete",
     "close": "Close",
+    "active": "Active",
     "noHouseholds": "You don't have any households yet",
     "confirmDeleteHousehold": "Are you sure you want to delete this household? This action cannot be undone.",
     "expenseCategories": {

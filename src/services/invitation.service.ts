@@ -15,10 +15,13 @@ class InvitationService {
       const records = await pb.collection(this.collection).getFullList<Invitation>({
         filter,
         expand: 'household,inviter,invitee',
-        sort: '-created',
       })
       return records
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return []
+      }
       console.error('Failed to fetch invitations:', error)
       return []
     }
@@ -32,10 +35,14 @@ class InvitationService {
       const records = await pb.collection(this.collection).getFullList<Invitation>({
         filter: `invitee = "${userId}" && status = "pending"`,
         expand: 'household,inviter',
-        sort: '-created',
+        requestKey: 'pending-invitations',
       })
       return records
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return []
+      }
       console.error('Failed to fetch pending invitations:', error)
       return []
     }

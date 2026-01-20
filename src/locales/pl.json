@@ -74,6 +74,12 @@
       "tasks": {
         "title": "Zadania",
         "description": "Zarządzaj zadaniami domowymi"
+      },
+      "households": {
+        "title": "Gospodarstwa domowe",
+        "description": "Utwórz gospodarstwo, aby rozpocząć zarządzanie domem",
+        "current": "Aktywne: {name}",
+        "manage": "Zarządzaj"
       }
     }
   },
@@ -182,6 +188,7 @@
     "rename": "Zmień nazwę",
     "delete": "Usuń",
     "close": "Zamknij",
+    "active": "Aktywne",
     "noHouseholds": "Nie masz jeszcze żadnych gospodarstw",
     "confirmDeleteHousehold": "Czy na pewno chcesz usunąć to gospodarstwo? Ta operacja jest nieodwracalna.",
     "expenseCategories": {

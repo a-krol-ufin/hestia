@@ -1,14 +1,24 @@
 <script setup lang="ts">
+import { ref, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth'
-import { ShoppingCartIcon, ChartPieIcon, ClipboardDocumentListIcon } from '@heroicons/vue/24/outline'
+import { useHouseholdStore } from '@/stores/household'
+import { ShoppingCartIcon, ChartPieIcon, ClipboardDocumentListIcon, HomeModernIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
+import ManageHouseholdsModal from '@/components/budget/ManageHouseholdsModal.vue'
 
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
 const authStore = useAuthStore()
+const householdStore = useHouseholdStore()
+
+const showHouseholdsModal = ref(false)
+
+onMounted(async () => {
+  await householdStore.fetchHouseholds()
+})
 
 const features = [
   {
@@ -36,6 +46,10 @@ function navigateTo(route: string, available: boolean) {
     router.push(route)
   }
 }
+
+function openHouseholdsModal() {
+  showHouseholdsModal.value = true
+}
 </script>
 
 <template>
@@ -49,6 +63,36 @@ function navigateTo(route: string, available: boolean) {
           <p class="text-lg text-slate-600">
             {{ t('dashboard.welcome') }}, <span class="font-bold text-orange-600">{{ authStore.user?.email }}</span>!
           </p>
+        </div>
+
+        <!-- Household Card -->
+        <div
+          @click="openHouseholdsModal"
+          class="mb-8 relative overflow-hidden bg-white rounded-2xl p-6 transition-all duration-300 border border-transparent cursor-pointer shadow-lg hover:shadow-xl hover:-translate-y-1 hover:border-orange-100"
+        >
+          <div class="absolute -right-6 -top-6 w-24 h-24 bg-orange-50 rounded-full opacity-50"></div>
+          <div class="relative z-10 flex items-center gap-6">
+            <div class="p-4 rounded-xl bg-orange-100 text-orange-500">
+              <HomeModernIcon class="w-8 h-8" />
+            </div>
+            <div class="flex-1">
+              <h3 class="text-xl font-bold text-slate-800 mb-1">
+                {{ t('dashboard.features.households.title') }}
+              </h3>
+              <p class="text-slate-600">
+                {{ householdStore.hasHouseholds
+                  ? t('dashboard.features.households.current', { name: householdStore.currentHousehold?.name || '' })
+                  : t('dashboard.features.households.description')
+                }}
+              </p>
+            </div>
+            <span class="text-orange-500 font-semibold flex items-center group">
+              {{ t('dashboard.features.households.manage') }}
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-1 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </span>
+          </div>
         </div>
 
         <!-- Features Grid -->
@@ -102,5 +146,11 @@ function navigateTo(route: string, available: boolean) {
       </div>
     </main>
     <Footer />
+
+    <!-- Manage Households Modal -->
+    <ManageHouseholdsModal
+      v-if="showHouseholdsModal"
+      @close="showHouseholdsModal = false"
+    />
   </div>
 </template>

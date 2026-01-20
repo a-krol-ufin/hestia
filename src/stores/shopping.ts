@@ -1,17 +1,30 @@
 import { defineStore } from 'pinia'
-import { ref } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { shoppingService } from '@/services/shopping.service'
+import { useHouseholdStore } from './household'
 import type { ShoppingItem, CreateShoppingItem, UpdateShoppingItem } from '@/types/shopping.types'
 
 export const useShoppingStore = defineStore('shopping', () => {
+  const householdStore = useHouseholdStore()
+
   const items = ref<ShoppingItem[]>([])
-  const currentHouseholdId = ref<string | null>(null)
   const isLoading = ref(false)
   const error = ref<string | null>(null)
 
-  function setCurrentHousehold(householdId: string | null) {
-    currentHouseholdId.value = householdId
-  }
+  // Use householdStore for current household
+  const currentHouseholdId = computed(() => householdStore.currentHouseholdId)
+
+  // Watch for household changes to reload items
+  watch(
+    () => householdStore.currentHouseholdId,
+    async (newId) => {
+      if (newId) {
+        await fetchItems(newId)
+      } else {
+        items.value = []
+      }
+    }
+  )
 
   async function fetchItems(householdId?: string) {
     const targetHouseholdId = householdId || currentHouseholdId.value
@@ -106,7 +119,6 @@ export const useShoppingStore = defineStore('shopping', () => {
     currentHouseholdId,
     isLoading,
     error,
-    setCurrentHousehold,
     fetchItems,
     addItem,
     updateItem,

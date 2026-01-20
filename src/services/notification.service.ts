@@ -14,9 +14,14 @@ class NotificationService {
         filter: `user = "${userId}"`,
         sort: '-created',
         expand: 'related_invitation',
+        requestKey: 'notifications-list',
       })
       return records.items
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist (migrations not applied)
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return []
+      }
       console.error('Failed to fetch notifications:', error)
       return []
     }
@@ -31,7 +36,11 @@ class NotificationService {
         filter: `user = "${userId}" && read = false`,
       })
       return result.totalItems
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return 0
+      }
       console.error('Failed to fetch unread count:', error)
       return 0
     }
@@ -100,13 +109,22 @@ class NotificationService {
   }
 
   // Real-time subscription
-  subscribe(callback: (event: { action: string; record: Notification }) => void): Promise<UnsubscribeFunc> {
-    return pb.collection(this.collection).subscribe<Notification>('*', (e) => {
-      const userId = pb.authStore.record?.id
-      if (e.record.user === userId) {
-        callback(e)
+  async subscribe(callback: (event: { action: string; record: Notification }) => void): Promise<UnsubscribeFunc | null> {
+    try {
+      return await pb.collection(this.collection).subscribe<Notification>('*', (e) => {
+        const userId = pb.authStore.record?.id
+        if (e.record.user === userId) {
+          callback(e)
+        }
+      })
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return null
       }
-    })
+      console.error('Failed to subscribe to notifications:', error)
+      return null
+    }
   }
 
   unsubscribe(): void {

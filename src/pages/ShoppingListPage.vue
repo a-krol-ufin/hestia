@@ -1,9 +1,9 @@
 <script setup lang="ts">
-import { onMounted, watch, computed } from 'vue'
+import { onMounted, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useShoppingStore } from '@/stores/shopping'
-import { useBudgetStore } from '@/stores/budget'
+import { useHouseholdStore } from '@/stores/household'
 import { ArrowLeftIcon, ShoppingCartIcon, HomeIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
@@ -14,31 +14,20 @@ import type { ShoppingCategory, ShoppingUnit } from '@/types/shopping.types'
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
 const shoppingStore = useShoppingStore()
-const budgetStore = useBudgetStore()
+const householdStore = useHouseholdStore()
 
-const currentHousehold = computed(() => budgetStore.currentHousehold)
-const hasHousehold = computed(() => !!currentHousehold.value)
+const currentHousehold = computed(() => householdStore.currentHousehold)
+const hasHousehold = computed(() => householdStore.hasHouseholds)
 
 onMounted(async () => {
   // Make sure we have households loaded
-  if (budgetStore.households.length === 0) {
-    await budgetStore.fetchHouseholds()
+  if (!householdStore.hasHouseholds) {
+    await householdStore.fetchHouseholds()
   }
 
-  // If we have a household, set it and fetch items
+  // If we have a household, fetch items (watcher in store handles this too)
   if (currentHousehold.value) {
-    shoppingStore.setCurrentHousehold(currentHousehold.value.id)
     await shoppingStore.fetchItems()
-  }
-})
-
-// Watch for household changes
-watch(currentHousehold, async (newHousehold) => {
-  if (newHousehold) {
-    shoppingStore.setCurrentHousehold(newHousehold.id)
-    await shoppingStore.fetchItems()
-  } else {
-    shoppingStore.clearItems()
   }
 })
 
