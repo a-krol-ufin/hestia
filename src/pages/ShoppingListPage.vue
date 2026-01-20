@@ -1,9 +1,10 @@
 <script setup lang="ts">
-import { onMounted } from 'vue'
+import { onMounted, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useShoppingStore } from '@/stores/shopping'
-import { ArrowLeftIcon, ShoppingCartIcon } from '@heroicons/vue/24/outline'
+import { useBudgetStore } from '@/stores/budget'
+import { ArrowLeftIcon, ShoppingCartIcon, HomeIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
 import ShoppingItem from '@/components/shopping/ShoppingItem.vue'
@@ -13,9 +14,32 @@ import type { ShoppingCategory, ShoppingUnit } from '@/types/shopping.types'
 const router = useRouter()
 const { t } = useI18n({ useScope: 'global' })
 const shoppingStore = useShoppingStore()
+const budgetStore = useBudgetStore()
 
-onMounted(() => {
-  shoppingStore.fetchItems()
+const currentHousehold = computed(() => budgetStore.currentHousehold)
+const hasHousehold = computed(() => !!currentHousehold.value)
+
+onMounted(async () => {
+  // Make sure we have households loaded
+  if (budgetStore.households.length === 0) {
+    await budgetStore.fetchHouseholds()
+  }
+
+  // If we have a household, set it and fetch items
+  if (currentHousehold.value) {
+    shoppingStore.setCurrentHousehold(currentHousehold.value.id)
+    await shoppingStore.fetchItems()
+  }
+})
+
+// Watch for household changes
+watch(currentHousehold, async (newHousehold) => {
+  if (newHousehold) {
+    shoppingStore.setCurrentHousehold(newHousehold.id)
+    await shoppingStore.fetchItems()
+  } else {
+    shoppingStore.clearItems()
+  }
 })
 
 function handleAddItem(item: { name: string; quantity: number; unit?: ShoppingUnit; category?: ShoppingCategory }) {
@@ -57,13 +81,33 @@ function goBack() {
             <div class="bg-orange-100 p-3 rounded-lg">
               <ShoppingCartIcon class="w-8 h-8 text-orange-500" />
             </div>
-            <h1 class="text-3xl font-bold text-slate-800">{{ t('shopping.title') }}</h1>
+            <div>
+              <h1 class="text-3xl font-bold text-slate-800">{{ t('shopping.title') }}</h1>
+              <p v-if="currentHousehold" class="text-sm text-slate-500 flex items-center gap-1 mt-1">
+                <HomeIcon class="w-4 h-4" />
+                {{ currentHousehold.name }}
+              </p>
+            </div>
           </div>
         </div>
 
-        <div class="mb-6">
-          <AddItemForm @add="handleAddItem" />
+        <!-- No household selected -->
+        <div v-if="!hasHousehold" class="text-center py-12 bg-white rounded-lg border border-slate-200">
+          <HomeIcon class="w-16 h-16 text-slate-300 mx-auto mb-4" />
+          <p class="text-slate-600 font-medium mb-2">{{ t('shopping.noHousehold') }}</p>
+          <p class="text-slate-500 text-sm mb-4">{{ t('shopping.noHouseholdDescription') }}</p>
+          <button
+            @click="router.push('/budget')"
+            class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors"
+          >
+            {{ t('shopping.goToBudget') }}
+          </button>
         </div>
+
+        <template v-else>
+          <div class="mb-6">
+            <AddItemForm @add="handleAddItem" />
+          </div>
 
         <div v-if="shoppingStore.isLoading" class="text-center py-12">
           <div class="animate-spin w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
@@ -84,6 +128,7 @@ function goBack() {
             @delete="handleDeleteItem"
           />
         </div>
+        </template>
       </div>
     </main>
     <Footer />
