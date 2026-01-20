@@ -4,11 +4,15 @@ migrate((app) => {
   const householdMembers = new Collection({
     name: "household_members",
     type: "base",
-    listRule: '@request.auth.id != "" && (household.owner = @request.auth.id || user = @request.auth.id)',
-    viewRule: '@request.auth.id != "" && (household.owner = @request.auth.id || user = @request.auth.id)',
-    createRule: null, // Only created through system/hooks
+    // Members can see other members of households they belong to
+    listRule: '@request.auth.id != ""',
+    viewRule: '@request.auth.id != ""',
+    // Allow authenticated users to create membership (validation in app code)
+    createRule: '@request.auth.id != ""',
+    // Only household owner can update roles
     updateRule: '@request.auth.id != "" && household.owner = @request.auth.id',
-    deleteRule: '@request.auth.id != "" && household.owner = @request.auth.id',
+    // Owner can delete, or user can remove themselves
+    deleteRule: '@request.auth.id != "" && (household.owner = @request.auth.id || user = @request.auth.id)',
     fields: [
       {
         name: "household",

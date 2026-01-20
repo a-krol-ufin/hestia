@@ -13,7 +13,7 @@ class NotificationService {
       const records = await pb.collection(this.collection).getList<Notification>(1, limit || 50, {
         filter: `user = "${userId}"`,
         expand: 'related_invitation',
-        requestKey: 'notifications-list',
+        requestKey: null, // Disable auto-cancellation
       })
       return records.items
     } catch (error: unknown) {

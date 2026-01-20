@@ -30,12 +30,20 @@ class InvitationService {
   async getPendingInvitationsForUser(): Promise<Invitation[]> {
     try {
       const userId = pb.authStore.record?.id
+      const userEmail = pb.authStore.record?.email
       if (!userId) return []
 
+      // Search by invitee ID or by email (for invitations sent before user registered)
+      let filter = `status = "pending" && (invitee = "${userId}"`
+      if (userEmail) {
+        filter += ` || invitee_email = "${userEmail}"`
+      }
+      filter += ')'
+
       const records = await pb.collection(this.collection).getFullList<Invitation>({
-        filter: `invitee = "${userId}" && status = "pending"`,
+        filter,
         expand: 'household,inviter',
-        requestKey: 'pending-invitations',
+        requestKey: null, // Disable auto-cancellation
       })
       return records
     } catch (error: unknown) {
@@ -116,18 +124,29 @@ class InvitationService {
   async acceptInvitation(invitationId: string): Promise<boolean> {
     try {
       const userId = pb.authStore.record?.id
+      const userEmail = pb.authStore.record?.email
       if (!userId) return false
 
       // Get the invitation first
       const invitation = await this.getInvitation(invitationId)
-      if (!invitation || invitation.invitee !== userId) {
-        console.error('Invitation not found or not for current user')
+      if (!invitation) {
+        console.error('Invitation not found')
         return false
       }
 
-      // Update invitation status
+      // Check if invitation is for current user (by ID or email)
+      const isForCurrentUser = invitation.invitee === userId ||
+        (invitation.invitee_email && invitation.invitee_email === userEmail)
+
+      if (!isForCurrentUser) {
+        console.error('Invitation not for current user')
+        return false
+      }
+
+      // Update invitation status and set invitee if not set
       await pb.collection(this.collection).update(invitationId, {
         status: 'accepted' as InvitationStatus,
+        invitee: userId, // Set invitee to current user
       })
 
       // Create household_member record
@@ -137,6 +156,26 @@ class InvitationService {
         role: invitation.role as MemberRole,
         joined_at: new Date().toISOString(),
       })
+
+      // Create notification for the inviter
+      try {
+        const userName = pb.authStore.record?.name || pb.authStore.record?.email || 'Someone'
+        await pb.collection('household_notifications').create({
+          user: invitation.inviter,
+          type: 'invitation_accepted',
+          title: 'Invitation accepted',
+          message: `${userName} accepted your invitation`,
+          read: false,
+          related_invitation: invitationId,
+          data: JSON.stringify({
+            household: invitation.household,
+            acceptedBy: userId
+          }),
+        })
+      } catch (notifError) {
+        // Don't fail if notification creation fails
+        console.warn('Failed to create notification for inviter:', notifError)
+      }
 
       return true
     } catch (error) {
@@ -150,9 +189,30 @@ class InvitationService {
       const userId = pb.authStore.record?.id
       if (!userId) return false
 
+      // Get invitation to set invitee if needed
+      const invitation = await this.getInvitation(invitationId)
+
       await pb.collection(this.collection).update(invitationId, {
         status: 'rejected' as InvitationStatus,
+        invitee: userId, // Set invitee to current user
       })
+
+      // Optionally notify the inviter
+      if (invitation) {
+        try {
+          const userName = pb.authStore.record?.name || pb.authStore.record?.email || 'Someone'
+          await pb.collection('household_notifications').create({
+            user: invitation.inviter,
+            type: 'invitation_accepted', // Using same type, message explains rejection
+            title: 'Invitation declined',
+            message: `${userName} declined your invitation`,
+            read: false,
+            related_invitation: invitationId,
+          })
+        } catch {
+          // Don't fail if notification creation fails
+        }
+      }
 
       return true
     } catch (error) {

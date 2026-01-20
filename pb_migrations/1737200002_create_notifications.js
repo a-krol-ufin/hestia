@@ -4,10 +4,14 @@ migrate((app) => {
   const notifications = new Collection({
     name: "household_notifications",
     type: "base",
+    // Users can only see their own notifications
     listRule: '@request.auth.id != "" && user = @request.auth.id',
     viewRule: '@request.auth.id != "" && user = @request.auth.id',
-    createRule: null, // Only created through system/hooks
+    // Allow authenticated users to create notifications (for other users)
+    createRule: '@request.auth.id != ""',
+    // Users can mark their own notifications as read
     updateRule: '@request.auth.id != "" && user = @request.auth.id',
+    // Users can delete their own notifications
     deleteRule: '@request.auth.id != "" && user = @request.auth.id',
     fields: [
       {

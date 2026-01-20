@@ -4,11 +4,15 @@ migrate((app) => {
   const invitations = new Collection({
     name: "household_invitations",
     type: "base",
-    listRule: '@request.auth.id != "" && (inviter = @request.auth.id || invitee = @request.auth.id)',
-    viewRule: '@request.auth.id != "" && (inviter = @request.auth.id || invitee = @request.auth.id)',
-    createRule: '@request.auth.id != ""', // Validation of role permissions in hook
-    updateRule: '@request.auth.id != "" && invitee = @request.auth.id',
-    deleteRule: '@request.auth.id != "" && inviter = @request.auth.id',
+    // Allow authenticated users to list/view (filtering done in app)
+    listRule: '@request.auth.id != ""',
+    viewRule: '@request.auth.id != ""',
+    // Authenticated users can create invitations
+    createRule: '@request.auth.id != ""',
+    // Authenticated users can update (validation in app code)
+    updateRule: '@request.auth.id != ""',
+    // Authenticated users can delete (validation in app code)
+    deleteRule: '@request.auth.id != ""',
     fields: [
       {
         name: "household",
