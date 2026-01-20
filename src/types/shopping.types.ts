@@ -43,7 +43,8 @@ export interface ShoppingItem {
   unit?: ShoppingUnit
   category?: ShoppingCategory
   checked: boolean
-  user: string
+  household: string
+  added_by?: string
   created: string
   updated: string
 }
