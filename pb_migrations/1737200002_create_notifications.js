@@ -1,8 +1,8 @@
 migrate((app) => {
-  const invitations = app.findCollectionByNameOrId("invitations")
+  const invitations = app.findCollectionByNameOrId("household_invitations")
 
   const notifications = new Collection({
-    name: "notifications",
+    name: "household_notifications",
     type: "base",
     listRule: '@request.auth.id != "" && user = @request.auth.id',
     viewRule: '@request.auth.id != "" && user = @request.auth.id',
@@ -56,13 +56,13 @@ migrate((app) => {
       },
     ],
     indexes: [
-      "CREATE INDEX idx_notifications_user ON notifications(user)",
-      "CREATE INDEX idx_notifications_read ON notifications(read)",
+      "CREATE INDEX idx_household_notifications_user ON household_notifications(user)",
+      "CREATE INDEX idx_household_notifications_read ON household_notifications(read)",
     ],
   })
 
   app.save(notifications)
 }, (app) => {
-  const notifications = app.findCollectionByNameOrId("notifications")
+  const notifications = app.findCollectionByNameOrId("household_notifications")
   app.delete(notifications)
 })

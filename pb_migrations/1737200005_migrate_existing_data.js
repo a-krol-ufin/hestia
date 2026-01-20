@@ -99,14 +99,13 @@ migrate((app) => {
   shoppingItems.updateRule = '@request.auth.id != "" && @collection.household_members.household = household && @collection.household_members.user = @request.auth.id'
   shoppingItems.deleteRule = '@request.auth.id != "" && @collection.household_members.household = household && @collection.household_members.user = @request.auth.id'
 
-  // 4. Make household required and remove user field
-  shoppingItems.fields = shoppingItems.fields.filter(f => f.name !== "user")
+  // 4. Remove user field and make household required
+  shoppingItems.fields.removeByName("user")
 
   // Update household field to be required
-  for (const field of shoppingItems.fields) {
-    if (field.name === "household") {
-      field.required = true
-    }
+  const householdField = shoppingItems.fields.getByName("household")
+  if (householdField) {
+    householdField.required = true
   }
 
   app.save(shoppingItems)
@@ -135,14 +134,14 @@ migrate((app) => {
   const shoppingItems = app.findCollectionByNameOrId("shopping_items")
 
   // Restore user field
-  shoppingItems.fields.push({
+  shoppingItems.fields.add(new Field({
     name: "user",
     type: "relation",
     required: true,
     maxSelect: 1,
     collectionId: "_pb_users_auth_",
     cascadeDelete: true,
-  })
+  }))
 
   // Restore original access rules
   shoppingItems.listRule = '@request.auth.id != "" && user = @request.auth.id'

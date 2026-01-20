@@ -3,7 +3,7 @@ import type { Notification, UpdateNotification } from '@/types/notification.type
 import type { UnsubscribeFunc } from 'pocketbase'
 
 class NotificationService {
-  private collection = 'notifications'
+  private collection = 'household_notifications'
 
   async getNotifications(limit?: number): Promise<Notification[]> {
     try {

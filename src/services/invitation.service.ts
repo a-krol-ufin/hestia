@@ -3,7 +3,7 @@ import type { Invitation, CreateInvitation, InvitationStatus } from '@/types/not
 import type { MemberRole } from '@/types/member.types'
 
 class InvitationService {
-  private collection = 'invitations'
+  private collection = 'household_invitations'
 
   async getInvitations(householdId?: string): Promise<Invitation[]> {
     try {

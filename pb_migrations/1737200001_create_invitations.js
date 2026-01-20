@@ -2,7 +2,7 @@ migrate((app) => {
   const households = app.findCollectionByNameOrId("households")
 
   const invitations = new Collection({
-    name: "invitations",
+    name: "household_invitations",
     type: "base",
     listRule: '@request.auth.id != "" && (inviter = @request.auth.id || invitee = @request.auth.id)',
     viewRule: '@request.auth.id != "" && (inviter = @request.auth.id || invitee = @request.auth.id)',
@@ -59,13 +59,13 @@ migrate((app) => {
       },
     ],
     indexes: [
-      "CREATE INDEX idx_invitations_email ON invitations(invitee_email)",
-      "CREATE INDEX idx_invitations_status ON invitations(status)",
+      "CREATE INDEX idx_household_invitations_email ON household_invitations(invitee_email)",
+      "CREATE INDEX idx_household_invitations_status ON household_invitations(status)",
     ],
   })
 
   app.save(invitations)
 }, (app) => {
-  const invitations = app.findCollectionByNameOrId("invitations")
+  const invitations = app.findCollectionByNameOrId("household_invitations")
   app.delete(invitations)
 })
