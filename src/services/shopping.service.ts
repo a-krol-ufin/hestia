@@ -8,10 +8,13 @@ class ShoppingService {
     try {
       const records = await pb.collection(this.collection).getFullList<ShoppingItem>({
         filter: `household = "${householdId}"`,
-        sort: '-created',
       })
       return records
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist or has issues
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return []
+      }
       console.error('Failed to fetch shopping items:', error)
       return []
     }

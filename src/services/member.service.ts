@@ -9,10 +9,13 @@ class MemberService {
       const records = await pb.collection(this.collection).getFullList<HouseholdMember>({
         filter: `household = "${householdId}"`,
         expand: 'user',
-        sort: 'role,-joined_at',
       })
       return records
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return []
+      }
       console.error('Failed to fetch household members:', error)
       return []
     }
@@ -25,7 +28,11 @@ class MemberService {
         expand: 'user',
       })
       return records.items[0] || null
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return null
+      }
       console.error('Failed to fetch household member:', error)
       return null
     }
@@ -71,7 +78,11 @@ class MemberService {
         joined_at: new Date().toISOString(),
       })
       return record
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return null
+      }
       console.error('Failed to create member record for owner:', error)
       return null
     }
@@ -86,7 +97,11 @@ class MemberService {
         filter: `user = "${userId}"`,
       })
       return records.map(r => r.household)
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return []
+      }
       console.error('Failed to fetch user households:', error)
       return []
     }

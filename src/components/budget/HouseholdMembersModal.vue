@@ -4,6 +4,7 @@ import { useI18n } from 'vue-i18n'
 import { XMarkIcon, UsersIcon, UserPlusIcon } from '@heroicons/vue/24/outline'
 import { memberService } from '@/services/member.service'
 import { invitationService } from '@/services/invitation.service'
+import { useAuthStore } from '@/stores/auth'
 import type { HouseholdMember, MemberRole } from '@/types/member.types'
 import type { Invitation } from '@/types/notification.types'
 import MemberListItem from './MemberListItem.vue'
@@ -21,6 +22,7 @@ const emit = defineEmits<{
 }>()
 
 const { t } = useI18n({ useScope: 'global' })
+const authStore = useAuthStore()
 
 const members = ref<HouseholdMember[]>([])
 const pendingInvitations = ref<Invitation[]>([])
@@ -29,8 +31,17 @@ const isLoading = ref(false)
 const showInviteForm = ref(false)
 const error = ref<string | null>(null)
 
-const currentUserRole = computed<MemberRole>(() => currentUserMembership.value?.role || 'member')
-const canInvite = computed(() => currentUserRole.value === 'admin' || currentUserRole.value === 'manager')
+// Check if current user is the household owner
+const isOwner = computed(() => authStore.user?.id === props.ownerId)
+
+// Current user role - owner is always admin even without membership record
+const currentUserRole = computed<MemberRole>(() => {
+  if (isOwner.value) return 'admin'
+  return currentUserMembership.value?.role || 'member'
+})
+
+// Owner and managers can invite
+const canInvite = computed(() => isOwner.value || currentUserRole.value === 'admin' || currentUserRole.value === 'manager')
 
 async function loadMembers() {
   isLoading.value = true
@@ -200,8 +211,22 @@ onMounted(() => {
         <!-- Members list -->
         <div v-else>
           <h3 class="text-sm font-semibold text-slate-600 mb-3">
-            {{ t('members.members') }} ({{ members.length }})
+            {{ t('members.members') }} ({{ members.length || (isOwner ? 1 : 0) }})
           </h3>
+
+          <!-- Show owner info if no members but user is owner -->
+          <div v-if="members.length === 0 && isOwner" class="p-4 bg-orange-50 border border-orange-200 rounded-lg mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center">
+                <span class="text-orange-600 font-semibold">{{ authStore.user?.name?.charAt(0) || authStore.user?.email?.charAt(0) || '?' }}</span>
+              </div>
+              <div>
+                <p class="font-medium text-slate-800">{{ authStore.user?.name || authStore.user?.email }}</p>
+                <p class="text-sm text-orange-600 font-medium">{{ t('members.owner') }} ({{ t('members.roles.admin') }})</p>
+              </div>
+            </div>
+          </div>
+
           <div class="space-y-3">
             <MemberListItem
               v-for="member in members"

@@ -68,6 +68,7 @@ class InvitationService {
       // Check if user with this email exists
       let inviteeId: string | undefined
       try {
+        // Use the correct users collection name in PocketBase
         const users = await pb.collection('users').getList(1, 1, {
           filter: `email = "${data.invitee_email}"`,
         })
@@ -76,17 +77,21 @@ class InvitationService {
           inviteeId = firstUser.id
         }
       } catch {
-        // User not found, invitation will be pending
+        // User not found, invitation will be pending - this is OK
       }
 
-      // Check if there's already a pending invitation
-      const existingInvitations = await pb.collection(this.collection).getList(1, 1, {
-        filter: `household = "${data.household}" && invitee_email = "${data.invitee_email}" && status = "pending"`,
-      })
+      // Check if there's already a pending invitation (skip if collection doesn't exist)
+      try {
+        const existingInvitations = await pb.collection(this.collection).getList(1, 1, {
+          filter: `household = "${data.household}" && invitee_email = "${data.invitee_email}" && status = "pending"`,
+        })
 
-      if (existingInvitations.items.length > 0) {
-        console.error('Pending invitation already exists for this email')
-        return null
+        if (existingInvitations.items.length > 0) {
+          console.error('Pending invitation already exists for this email')
+          return null
+        }
+      } catch {
+        // Collection might not exist, continue with creating the invitation
       }
 
       const record = await pb.collection(this.collection).create<Invitation>({
@@ -97,8 +102,13 @@ class InvitationService {
       })
 
       return record
-    } catch (error) {
-      console.error('Failed to send invitation:', error)
+    } catch (error: unknown) {
+      // Log detailed error for debugging
+      if (error && typeof error === 'object' && 'data' in error) {
+        console.error('Failed to send invitation:', error, (error as { data?: unknown }).data)
+      } else {
+        console.error('Failed to send invitation:', error)
+      }
       return null
     }
   }

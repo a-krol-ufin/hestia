@@ -12,7 +12,6 @@ class NotificationService {
 
       const records = await pb.collection(this.collection).getList<Notification>(1, limit || 50, {
         filter: `user = "${userId}"`,
-        sort: '-created',
         expand: 'related_invitation',
         requestKey: 'notifications-list',
       })
