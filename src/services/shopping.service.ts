@@ -4,22 +4,29 @@ import type { ShoppingItem, CreateShoppingItem, UpdateShoppingItem } from '@/typ
 class ShoppingService {
   private collection = 'shopping_items'
 
-  async getItems(): Promise<ShoppingItem[]> {
+  async getItems(householdId: string): Promise<ShoppingItem[]> {
     try {
-      const records = await pb.collection(this.collection).getFullList<ShoppingItem>()
+      const records = await pb.collection(this.collection).getFullList<ShoppingItem>({
+        filter: `household = "${householdId}"`,
+      })
       return records
-    } catch (error) {
+    } catch (error: unknown) {
+      // Silently ignore if collection doesn't exist or has issues
+      if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
+        return []
+      }
       console.error('Failed to fetch shopping items:', error)
       return []
     }
   }
 
-  async addItem(item: CreateShoppingItem): Promise<ShoppingItem | null> {
+  async addItem(householdId: string, item: CreateShoppingItem): Promise<ShoppingItem | null> {
     try {
       const record = await pb.collection(this.collection).create<ShoppingItem>({
         ...item,
         checked: false,
-        user: pb.authStore.record?.id,
+        household: householdId,
+        added_by: pb.authStore.record?.id,
       })
       return record
     } catch (error) {

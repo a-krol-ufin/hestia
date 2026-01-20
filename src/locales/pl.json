@@ -74,6 +74,12 @@
       "tasks": {
         "title": "Zadania",
         "description": "Zarządzaj zadaniami domowymi"
+      },
+      "households": {
+        "title": "Gospodarstwa domowe",
+        "description": "Utwórz gospodarstwo, aby rozpocząć zarządzanie domem",
+        "current": "Aktywne: {name}",
+        "manage": "Zarządzaj"
       }
     }
   },
@@ -83,6 +89,9 @@
     "addButton": "Dodaj",
     "empty": "Twoja lista zakupów jest pusta",
     "back": "Powrót do panelu",
+    "noHousehold": "Nie wybrano gospodarstwa",
+    "noHouseholdDescription": "Utwórz lub wybierz gospodarstwo, aby zarządzać listą zakupów",
+    "goToBudget": "Przejdź do budżetu",
     "units": {
       "kg": "kg",
       "g": "g",
@@ -179,6 +188,7 @@
     "rename": "Zmień nazwę",
     "delete": "Usuń",
     "close": "Zamknij",
+    "active": "Aktywne",
     "noHouseholds": "Nie masz jeszcze żadnych gospodarstw",
     "confirmDeleteHousehold": "Czy na pewno chcesz usunąć to gospodarstwo? Ta operacja jest nieodwracalna.",
     "expenseCategories": {
@@ -227,6 +237,63 @@
     "title": "Strona nie znaleziona",
     "description": "Ups! Strona, której szukasz, nie istnieje.",
     "backButton": "Wróć do strony głównej"
+  },
+  "notifications": {
+    "title": "Powiadomienia",
+    "empty": "Brak powiadomień",
+    "markAsRead": "Oznacz jako przeczytane",
+    "markAllAsRead": "Oznacz wszystkie jako przeczytane",
+    "delete": "Usuń",
+    "deleteAllRead": "Usuń przeczytane",
+    "accept": "Akceptuj",
+    "reject": "Odrzuć",
+    "pendingInvitations": "Oczekujące zaproszenia",
+    "recentNotifications": "Ostatnie powiadomienia",
+    "justNow": "Przed chwilą",
+    "minutesAgo": "{count} min temu",
+    "hoursAgo": "{count} godz. temu",
+    "daysAgo": "{count} dni temu",
+    "invitationTitle": "Zaproszenie do {household}",
+    "invitationMessage": "{inviter} zaprosił Cię jako {role}",
+    "roles": {
+      "admin": "Administrator",
+      "manager": "Menedżer",
+      "member": "Członek"
+    }
+  },
+  "members": {
+    "title": "Członkowie gospodarstwa",
+    "members": "Członkowie",
+    "inviteMember": "Zaproś członka",
+    "pendingInvitations": "Oczekujące zaproszenia",
+    "pending": "Oczekuje",
+    "loading": "Ładowanie...",
+    "emailLabel": "Adres email",
+    "emailPlaceholder": "Wprowadź adres email",
+    "roleLabel": "Rola",
+    "messageLabel": "Wiadomość",
+    "messagePlaceholder": "Dodaj osobistą wiadomość...",
+    "sendInvitation": "Wyślij zaproszenie",
+    "cancel": "Anuluj",
+    "remove": "Usuń",
+    "owner": "Właściciel",
+    "unknownUser": "Nieznany użytkownik",
+    "managerDescription": "Może zapraszać i usuwać członków, zarządzać elementami",
+    "memberDescription": "Może dodawać i edytować elementy",
+    "roles": {
+      "admin": "Administrator",
+      "manager": "Menedżer",
+      "member": "Członek"
+    },
+    "errorEmailRequired": "Email jest wymagany",
+    "errorEmailInvalid": "Nieprawidłowy adres email",
+    "errorLoading": "Nie udało się załadować członków",
+    "errorChangeRole": "Nie udało się zmienić roli",
+    "errorRemove": "Nie udało się usunąć członka",
+    "errorInvite": "Nie udało się wysłać zaproszenia",
+    "errorCancelInvitation": "Nie udało się anulować zaproszenia",
+    "confirmRemove": "Czy na pewno chcesz usunąć tego członka?",
+    "confirmCancelInvitation": "Czy na pewno chcesz anulować to zaproszenie?"
   },
   "profile": {
     "title": "Twój profil",
