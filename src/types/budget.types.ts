@@ -27,19 +27,16 @@ export interface Household {
   id: string
   name: string
   owner: string
-  members: string[]
   created: string
   updated: string
 }
 
 export interface CreateHousehold {
   name: string
-  members?: string[]
 }
 
 export interface UpdateHousehold {
   name?: string
-  members?: string[]
 }
 
 // Budget Entry

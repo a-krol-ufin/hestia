@@ -1,4 +1,5 @@
 import pb from './pocketbase'
+import { memberService } from './member.service'
 import type {
   Household,
   CreateHousehold,
@@ -19,8 +20,49 @@ class BudgetService {
   // Households
   async getHouseholds(): Promise<Household[]> {
     try {
-      const records = await pb.collection(this.householdsCollection).getFullList<Household>()
-      return records
+      const userId = pb.authStore.record?.id
+      if (!userId) return []
+
+      // Get households where user is owner
+      const ownedHouseholds = await pb.collection(this.householdsCollection).getFullList<Household>({
+        filter: `owner = "${userId}"`,
+      })
+
+      // Get households where user is a member (through household_members)
+      const memberHouseholds: Household[] = []
+      try {
+        const memberships = await pb.collection('household_members').getFullList({
+          filter: `user = "${userId}"`,
+          expand: 'household',
+        })
+
+        // Extract expanded households from memberships
+        for (const membership of memberships) {
+          const expandedHousehold = membership.expand?.household as Household | undefined
+
+          if (expandedHousehold) {
+            // Only add if not already in owned list
+            if (!ownedHouseholds.find(h => h.id === expandedHousehold.id)) {
+              memberHouseholds.push(expandedHousehold)
+            }
+          } else if (membership.household) {
+            // Expand failed - try to fetch household directly
+            try {
+              const household = await pb.collection(this.householdsCollection).getOne<Household>(membership.household)
+              if (household && !ownedHouseholds.find(h => h.id === household.id)) {
+                memberHouseholds.push(household)
+              }
+            } catch {
+              // Could not fetch household - user might not have access
+            }
+          }
+        }
+      } catch {
+        // household_members collection might not exist yet
+      }
+
+      // Combine and return unique households
+      return [...ownedHouseholds, ...memberHouseholds]
     } catch (error) {
       console.error('Failed to fetch households:', error)
       return []
@@ -43,8 +85,11 @@ class BudgetService {
       const record = await pb.collection(this.householdsCollection).create<Household>({
         ...data,
         owner: userId,
-        members: [userId, ...(data.members || [])],
       })
+
+      // Create household_member record for owner
+      await memberService.createMemberForOwner(record.id)
+
       return record
     } catch (error) {
       console.error('Failed to create household:', error)

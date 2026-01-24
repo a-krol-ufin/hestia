@@ -75,7 +75,7 @@ function describeArc(x: number, y: number, radius: number, startAngle: number, e
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-lg p-6">
+  <div class="bg-white rounded-3xl shadow-sm p-6">
     <h3 class="text-lg font-semibold text-slate-800 mb-4">
       {{ t('budget.expensesByCategory') }}
     </h3>
@@ -87,7 +87,7 @@ function describeArc(x: number, y: number, radius: number, startAngle: number, e
     <div v-else class="space-y-6">
       <!-- Pie Chart -->
       <div class="flex justify-center">
-        <svg viewBox="0 0 200 200" class="w-64 h-64">
+        <svg viewBox="0 0 200 200" class="w-48 h-48">
           <path
             v-for="(item, index) in chartData"
             :key="index"
@@ -95,7 +95,7 @@ function describeArc(x: number, y: number, radius: number, startAngle: number, e
             :fill="item.color"
             class="transition-opacity hover:opacity-80 cursor-pointer"
           />
-          <!-- Center circle -->
+          <!-- Center circle with glassmorphism effect -->
           <circle cx="100" cy="100" r="50" fill="white" />
           <text
             x="100"
@@ -117,27 +117,27 @@ function describeArc(x: number, y: number, radius: number, startAngle: number, e
       </div>
 
       <!-- Legend -->
-      <div class="space-y-2">
+      <div class="space-y-1">
         <div
           v-for="item in chartData"
           :key="item.category"
-          class="flex items-center justify-between p-3 rounded-lg hover:bg-slate-50 transition-colors"
+          class="flex items-center justify-between p-2 rounded-xl hover:bg-slate-50 transition-colors"
         >
           <div class="flex items-center gap-3">
             <div
-              class="w-4 h-4 rounded-full"
+              class="w-3 h-3 rounded-full"
               :style="{ backgroundColor: item.color }"
             />
             <CategoryIcon :category="item.category" size="sm" />
-            <span class="font-medium text-slate-700">
+            <span class="text-sm font-medium text-slate-700">
               {{ t(`budget.expenseCategories.${item.category}`) }}
             </span>
           </div>
-          <div class="flex items-center gap-4">
-            <span class="text-slate-600">
-              {{ item.percentage.toFixed(1) }}%
+          <div class="flex items-center gap-3">
+            <span class="text-sm text-slate-500">
+              {{ item.percentage.toFixed(0) }}%
             </span>
-            <span class="font-semibold text-slate-800">
+            <span class="text-sm font-semibold text-slate-800 min-w-[60px] text-right">
               {{ item.amount.toFixed(2) }}
             </span>
           </div>

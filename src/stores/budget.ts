@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
+import { ref, computed, watch } from 'vue'
 import { budgetService } from '@/services/budget.service'
+import { useHouseholdStore } from './household'
 import type {
-  Household,
-  CreateHousehold,
   BudgetEntry,
   CreateBudgetEntry,
   BudgetPlan,
@@ -14,14 +13,18 @@ import type {
 } from '@/types/budget.types'
 
 export const useBudgetStore = defineStore('budget', () => {
+  const householdStore = useHouseholdStore()
+
   // State
-  const households = ref<Household[]>([])
-  const currentHousehold = ref<Household | null>(null)
   const entries = ref<BudgetEntry[]>([])
   const plans = ref<BudgetPlan[]>([])
   const currentMonth = ref<string>(new Date().toISOString().slice(0, 7)) // YYYY-MM
   const isLoading = ref(false)
   const error = ref<string | null>(null)
+
+  // Computed - delegate to householdStore
+  const households = computed(() => householdStore.households)
+  const currentHousehold = computed(() => householdStore.currentHousehold)
 
   // Computed
   const monthlySummary = computed<MonthlySummary>(() => {
@@ -103,75 +106,60 @@ export const useBudgetStore = defineStore('budget', () => {
       .filter(p => p.planned > 0) // Only show categories with plans
   })
 
-  // Households
+  // Watch for household changes to reload data
+  watch(
+    () => householdStore.currentHouseholdId,
+    async (newId) => {
+      if (newId) {
+        await fetchEntriesForMonth(currentMonth.value)
+        await fetchPlansForMonth(currentMonth.value)
+      } else {
+        entries.value = []
+        plans.value = []
+      }
+    }
+  )
+
+  // Households - delegate to householdStore
   async function fetchHouseholds() {
     isLoading.value = true
     error.value = null
-    households.value = await budgetService.getHouseholds()
+    await householdStore.fetchHouseholds()
 
-    if (households.value.length > 0 && !currentHousehold.value) {
-      const firstHousehold = households.value[0]
-      if (firstHousehold) {
-        currentHousehold.value = firstHousehold
-        await fetchEntriesForMonth(currentMonth.value)
-        await fetchPlansForMonth(currentMonth.value)
-      }
+    if (householdStore.currentHousehold) {
+      await fetchEntriesForMonth(currentMonth.value)
+      await fetchPlansForMonth(currentMonth.value)
     }
 
     isLoading.value = false
   }
 
-  async function createHousehold(data: CreateHousehold) {
+  async function createHousehold(data: { name: string }) {
     error.value = null
-    const household = await budgetService.createHousehold(data)
-    if (household) {
-      households.value.unshift(household)
-      currentHousehold.value = household
-    } else {
+    const household = await householdStore.createHousehold(data)
+    if (!household) {
       error.value = 'Failed to create household'
     }
   }
 
   async function updateHousehold(id: string, data: { name: string }) {
     error.value = null
-    const updated = await budgetService.updateHousehold(id, data)
-    if (updated) {
-      const index = households.value.findIndex(h => h.id === id)
-      if (index !== -1) {
-        households.value[index] = updated
-      }
-      if (currentHousehold.value?.id === id) {
-        currentHousehold.value = updated
-      }
-    } else {
+    const updated = await householdStore.updateHousehold(id, data)
+    if (!updated) {
       error.value = 'Failed to update household'
     }
   }
 
   async function deleteHousehold(id: string) {
     error.value = null
-    const success = await budgetService.deleteHousehold(id)
-    if (success) {
-      households.value = households.value.filter(h => h.id !== id)
-      if (currentHousehold.value?.id === id) {
-        currentHousehold.value = households.value[0] || null
-        if (currentHousehold.value) {
-          await fetchEntriesForMonth(currentMonth.value)
-          await fetchPlansForMonth(currentMonth.value)
-        }
-      }
-    } else {
+    const success = await householdStore.deleteHousehold(id)
+    if (!success) {
       error.value = 'Failed to delete household'
     }
   }
 
-  async function selectHousehold(id: string) {
-    const household = households.value.find(h => h.id === id)
-    if (household) {
-      currentHousehold.value = household
-      await fetchEntriesForMonth(currentMonth.value)
-      await fetchPlansForMonth(currentMonth.value)
-    }
+  function selectHousehold(id: string) {
+    householdStore.selectHousehold(id)
   }
 
   // Entries
@@ -261,8 +249,7 @@ export const useBudgetStore = defineStore('budget', () => {
   }
 
   function clearData() {
-    households.value = []
-    currentHousehold.value = null
+    householdStore.clearData()
     entries.value = []
     plans.value = []
     error.value = null
