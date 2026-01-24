@@ -29,7 +29,7 @@ class BudgetService {
       })
 
       // Get households where user is a member (through household_members)
-      let memberHouseholds: Household[] = []
+      const memberHouseholds: Household[] = []
       try {
         const memberships = await pb.collection('household_members').getFullList({
           filter: `user = "${userId}"`,

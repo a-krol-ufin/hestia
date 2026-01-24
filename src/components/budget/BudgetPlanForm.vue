@@ -44,11 +44,7 @@ function handleSubmit() {
 </script>
 
 <template>
-  <div class="bg-white rounded-lg shadow-lg p-6">
-    <h3 class="text-lg font-semibold text-slate-800 mb-4">
-      {{ t('budget.addPlan') }}
-    </h3>
-
+  <div>
     <form @submit.prevent="handleSubmit" class="space-y-4">
       <!-- Category selector -->
       <div>

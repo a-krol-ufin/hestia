@@ -1,3 +1,137 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Budget Styles - Soft UI / Glassmorphism */
+@layer components {
+  /* Layout */
+  .budget-page {
+    @apply min-h-screen bg-orange-50 pt-8 px-4 sm:pt-12 pb-20;
+  }
+
+  /* Cards */
+  .budget-card {
+    @apply bg-white rounded-2xl shadow-lg p-6;
+  }
+
+  .budget-card--dark {
+    @apply bg-gradient-to-br from-slate-800 to-slate-900 text-white;
+  }
+
+  /* Summary Cards */
+  .budget-summary-grid {
+    @apply grid grid-cols-1 md:grid-cols-3 gap-4 mb-8;
+  }
+
+  .budget-summary-card {
+    @apply rounded-2xl p-5 transition-transform hover:-translate-y-1;
+  }
+
+  .budget-summary-card--balance {
+    @apply bg-gradient-to-br from-slate-800 to-slate-900 text-white shadow-lg;
+  }
+
+  .budget-summary-card--income {
+    @apply bg-white shadow-lg;
+  }
+
+  .budget-summary-card--expense {
+    @apply bg-white shadow-lg;
+  }
+
+  /* Quick Action Bar */
+  .budget-quick-action-bar {
+    @apply flex flex-col md:flex-row items-center bg-white p-2 rounded-[2rem];
+    @apply shadow-lg shadow-orange-100/50 border border-slate-50;
+    @apply w-full max-w-4xl mx-auto mb-10;
+  }
+
+  /* Transaction List */
+  .budget-transaction-list {
+    @apply bg-white p-6 rounded-3xl shadow-sm;
+  }
+
+  .budget-transaction-item {
+    @apply flex items-center justify-between py-4 border-b border-slate-50;
+    @apply last:border-0 hover:bg-slate-50 rounded-lg px-2 transition;
+  }
+
+  /* Month Pill */
+  .budget-month-pill {
+    @apply bg-white px-4 py-2 rounded-full shadow-sm;
+    @apply text-slate-600 font-medium hover:bg-orange-100;
+    @apply cursor-pointer flex items-center gap-2 transition-colors;
+  }
+
+  /* Buttons */
+  .budget-btn-primary {
+    @apply bg-orange-500 hover:bg-orange-600 text-white;
+    @apply px-6 py-3 rounded-full font-medium transition shadow-md;
+  }
+
+  .budget-btn-secondary {
+    @apply bg-slate-100 hover:bg-slate-200 text-slate-600;
+    @apply px-4 py-2 rounded-full font-medium transition;
+  }
+
+  /* Analytics Grid */
+  .budget-analytics-grid {
+    @apply grid grid-cols-1 lg:grid-cols-3 gap-6;
+  }
+
+  /* Header */
+  .budget-header {
+    @apply flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8;
+  }
+
+  .budget-header__title-group {
+    @apply flex items-center gap-4;
+  }
+
+  .budget-header__back-btn {
+    @apply flex items-center gap-2 text-slate-600 hover:text-orange-500 transition-colors;
+  }
+
+  .budget-header__title {
+    @apply text-3xl font-bold text-slate-800;
+  }
+
+  /* Type Toggle */
+  .budget-type-toggle {
+    @apply flex bg-slate-100 rounded-full p-1;
+  }
+
+  .budget-type-toggle__btn {
+    @apply px-4 py-2 rounded-full font-medium transition-all text-sm;
+  }
+
+  .budget-type-toggle__btn--active-expense {
+    @apply bg-rose-500 text-white shadow-sm;
+  }
+
+  .budget-type-toggle__btn--active-income {
+    @apply bg-emerald-500 text-white shadow-sm;
+  }
+
+  .budget-type-toggle__btn--inactive {
+    @apply text-slate-600 hover:bg-slate-200;
+  }
+
+  /* Amount Input */
+  .budget-amount-input {
+    @apply text-xl font-bold text-slate-800 bg-transparent border-none;
+    @apply focus:outline-none focus:ring-0 w-32 text-center;
+  }
+
+  /* Category Select */
+  .budget-category-select {
+    @apply flex-grow px-4 py-2 bg-transparent border-none;
+    @apply text-slate-600 focus:outline-none focus:ring-0;
+    @apply cursor-pointer;
+  }
+
+  /* Date Group Header */
+  .budget-date-group {
+    @apply text-sm font-medium text-slate-500 mb-3 mt-4 first:mt-0;
+  }
+}
