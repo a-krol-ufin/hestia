@@ -1,3 +1,6 @@
+@import '../styles/budget.css';
+@import '../styles/shopping.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

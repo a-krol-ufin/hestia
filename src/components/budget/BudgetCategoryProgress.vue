@@ -12,15 +12,15 @@ const props = defineProps<Props>()
 const { t } = useI18n({ useScope: 'global' })
 
 const progressColor = computed(() => {
-  if (props.progress.percentage < 75) return 'bg-green-500'
-  if (props.progress.percentage < 100) return 'bg-yellow-500'
-  return 'bg-red-500'
+  if (props.progress.percentage < 75) return 'bg-emerald-500'
+  if (props.progress.percentage < 100) return 'bg-amber-500'
+  return 'bg-rose-500'
 })
 
 const progressBarColor = computed(() => {
-  if (props.progress.percentage < 75) return 'bg-green-100'
-  if (props.progress.percentage < 100) return 'bg-yellow-100'
-  return 'bg-red-100'
+  if (props.progress.percentage < 75) return 'bg-emerald-100'
+  if (props.progress.percentage < 100) return 'bg-amber-100'
+  return 'bg-rose-100'
 })
 
 const statusText = computed(() => {
@@ -34,14 +34,14 @@ const statusText = computed(() => {
 })
 
 const statusColor = computed(() => {
-  if (props.progress.remaining > 0) return 'text-green-600'
+  if (props.progress.remaining > 0) return 'text-emerald-600'
   if (props.progress.remaining === 0) return 'text-slate-600'
-  return 'text-red-600'
+  return 'text-rose-600'
 })
 </script>
 
 <template>
-  <div class="bg-white rounded-lg p-4 border border-slate-200">
+  <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 hover:shadow-sm transition-shadow">
     <!-- Category header -->
     <div class="flex items-center justify-between mb-3">
       <div class="flex items-center gap-2">

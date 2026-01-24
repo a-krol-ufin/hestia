@@ -21,7 +21,7 @@ export const useAppStore = defineStore('app', () => {
         links: [
           { id: "features", href: "#features" },
           { id: "install", href: "#install" },
-          { id: "github", href: "https://github.com/twoj-user/hestia" }
+          { id: "github", href: "https://github.com/a-krol-ufin/hestia" }
         ]
       },
       hero: {
