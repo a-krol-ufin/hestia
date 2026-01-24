@@ -4,11 +4,13 @@ import { useRouter } from 'vue-router'
 import { useI18n } from 'vue-i18n'
 import { useShoppingStore } from '@/stores/shopping'
 import { useHouseholdStore } from '@/stores/household'
-import { ArrowLeftIcon, ShoppingCartIcon, HomeIcon } from '@heroicons/vue/24/outline'
+import { HomeIcon } from '@heroicons/vue/24/outline'
 import Navbar from '@/components/Navbar.vue'
 import Footer from '@/components/Footer.vue'
-import ShoppingItem from '@/components/shopping/ShoppingItem.vue'
-import AddItemForm from '@/components/shopping/AddItemForm.vue'
+import ShoppingHeader from '@/components/shopping/ShoppingHeader.vue'
+import ShoppingInputBar from '@/components/shopping/ShoppingInputBar.vue'
+import ShoppingQuickChips from '@/components/shopping/ShoppingQuickChips.vue'
+import ShoppingListContainer from '@/components/shopping/ShoppingListContainer.vue'
 import type { ShoppingCategory, ShoppingUnit } from '@/types/shopping.types'
 
 const router = useRouter()
@@ -35,6 +37,15 @@ function handleAddItem(item: { name: string; quantity: number; unit?: ShoppingUn
   shoppingStore.addItem(item)
 }
 
+function handleQuickAdd(item: { name: string; category: ShoppingCategory }) {
+  shoppingStore.addItem({
+    name: item.name,
+    quantity: 1,
+    unit: 'szt',
+    category: item.category,
+  })
+}
+
 function handleUpdateItem(id: string, data: { name?: string; quantity?: number; unit?: ShoppingUnit }) {
   shoppingStore.updateItem(id, data)
 }
@@ -56,67 +67,40 @@ function goBack() {
   <div class="min-h-screen bg-orange-50 flex flex-col">
     <Navbar />
     <main class="flex-grow pt-28">
-      <div class="container mx-auto px-6 py-8 max-w-2xl">
-        <div class="mb-8">
-          <button
-            @click="goBack"
-            class="flex items-center space-x-2 text-slate-600 hover:text-orange-500 transition-colors mb-4"
-          >
-            <ArrowLeftIcon class="w-5 h-5" />
-            <span>{{ t('shopping.back') }}</span>
-          </button>
-
-          <div class="flex items-center space-x-3">
-            <div class="bg-orange-100 p-3 rounded-lg">
-              <ShoppingCartIcon class="w-8 h-8 text-orange-500" />
-            </div>
-            <div>
-              <h1 class="text-3xl font-bold text-slate-800">{{ t('shopping.title') }}</h1>
-              <p v-if="currentHousehold" class="text-sm text-slate-500 flex items-center gap-1 mt-1">
-                <HomeIcon class="w-4 h-4" />
-                {{ currentHousehold.name }}
-              </p>
-            </div>
-          </div>
-        </div>
+      <div class="shopping-content mx-auto px-4">
+        <!-- Header -->
+        <ShoppingHeader @go-back="goBack" />
 
         <!-- No household selected -->
-        <div v-if="!hasHousehold" class="text-center py-12 bg-white rounded-lg border border-slate-200">
+        <div v-if="!hasHousehold" class="text-center py-12 bg-white rounded-2xl border border-slate-200 shadow-sm">
           <HomeIcon class="w-16 h-16 text-slate-300 mx-auto mb-4" />
           <p class="text-slate-600 font-medium mb-2">{{ t('shopping.noHousehold') }}</p>
           <p class="text-slate-500 text-sm mb-4">{{ t('shopping.noHouseholdDescription') }}</p>
           <button
             @click="router.push('/budget')"
-            class="px-4 py-2 bg-orange-500 hover:bg-orange-600 text-white font-medium rounded-lg transition-colors"
+            class="px-6 py-3 bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-semibold rounded-full transition-all shadow-md hover:shadow-lg"
           >
             {{ t('shopping.goToBudget') }}
           </button>
         </div>
 
         <template v-else>
-          <div class="mb-6">
-            <AddItemForm @add="handleAddItem" />
+          <!-- Input Bar -->
+          <div class="mb-8">
+            <ShoppingInputBar @add="handleAddItem" />
           </div>
 
-        <div v-if="shoppingStore.isLoading" class="text-center py-12">
-          <div class="animate-spin w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full mx-auto"></div>
-        </div>
+          <!-- Quick Chips -->
+          <ShoppingQuickChips @quick-add="handleQuickAdd" />
 
-        <div v-else-if="shoppingStore.items.length === 0" class="text-center py-12">
-          <ShoppingCartIcon class="w-16 h-16 text-slate-300 mx-auto mb-4" />
-          <p class="text-slate-500">{{ t('shopping.empty') }}</p>
-        </div>
-
-        <div v-else class="space-y-3">
-          <ShoppingItem
-            v-for="item in shoppingStore.items"
-            :key="item.id"
-            :item="item"
+          <!-- List -->
+          <ShoppingListContainer
+            :items="shoppingStore.items"
+            :is-loading="shoppingStore.isLoading"
             @toggle="handleToggleItem"
-            @update="handleUpdateItem"
             @delete="handleDeleteItem"
+            @update="handleUpdateItem"
           />
-        </div>
         </template>
       </div>
     </main>

@@ -85,6 +85,12 @@
   },
   "shopping": {
     "title": "Lista zakupów",
+    "headerTitle": "Lista Zakupów",
+    "headerSubtitle": "Zaplanuj posiłki i nie kupuj zbędnych rzeczy.",
+    "inputPlaceholder": "Co trzeba kupić? (np. Mleko)",
+    "quickAddLabel": "Szybkie dodawanie:",
+    "emptyTitle": "Twoja lista jest pusta",
+    "emptySubtitle": "Dodaj pierwsze produkty powyżej!",
     "addPlaceholder": "Dodaj produkt...",
     "addButton": "Dodaj",
     "empty": "Twoja lista zakupów jest pusta",

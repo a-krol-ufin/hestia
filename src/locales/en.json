@@ -85,6 +85,12 @@
   },
   "shopping": {
     "title": "Shopping List",
+    "headerTitle": "Shopping List",
+    "headerSubtitle": "Plan your meals and avoid unnecessary purchases.",
+    "inputPlaceholder": "What do you need? (e.g., Milk)",
+    "quickAddLabel": "Quick add:",
+    "emptyTitle": "Your list is empty",
+    "emptySubtitle": "Add your first items above!",
     "addPlaceholder": "Add item...",
     "addButton": "Add",
     "empty": "Your shopping list is empty",
