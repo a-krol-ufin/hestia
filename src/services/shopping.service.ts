@@ -1,4 +1,4 @@
-import pb from './pocketbase'
+import pb, { isAuthError, handle401Error } from './pocketbase'
 import type { ShoppingItem, CreateShoppingItem, UpdateShoppingItem } from '@/types/shopping.types'
 
 class ShoppingService {
@@ -11,6 +11,10 @@ class ShoppingService {
       })
       return records
     } catch (error: unknown) {
+      if (isAuthError(error)) {
+        handle401Error()
+        return []
+      }
       // Silently ignore if collection doesn't exist or has issues
       if (error && typeof error === 'object' && 'status' in error && error.status === 400) {
         return []

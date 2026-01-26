@@ -1,4 +1,4 @@
-import pb from './pocketbase'
+import pb, { isAuthError, handle401Error } from './pocketbase'
 import { memberService } from './member.service'
 import type {
   Household,
@@ -64,6 +64,10 @@ class BudgetService {
       // Combine and return unique households
       return [...ownedHouseholds, ...memberHouseholds]
     } catch (error) {
+      if (isAuthError(error)) {
+        handle401Error()
+        return []
+      }
       console.error('Failed to fetch households:', error)
       return []
     }

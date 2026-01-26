@@ -53,8 +53,12 @@ const router = createRouter({
   ],
 })
 
-router.beforeEach((to, _from, next) => {
+router.beforeEach(async (to, _from, next) => {
   const authStore = useAuthStore()
+
+  if (!authStore.isInitialized) {
+    await authStore.initSession()
+  }
 
   if (to.meta.requiresGuest && authStore.isAuthenticated) {
     next({ name: 'dashboard' })

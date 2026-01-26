@@ -1,13 +1,18 @@
 <script setup lang="ts">
-import { onMounted, watch } from 'vue'
+import { onMounted, watch, ref } from 'vue'
 import { useAuthStore } from '@/stores/auth'
 import { useNotificationStore } from '@/stores/notification'
 
 const authStore = useAuthStore()
 const notificationStore = useNotificationStore()
+const isAppReady = ref(false)
 
-onMounted(() => {
+onMounted(async () => {
+
+  await authStore.initSession()
+
   authStore.initAuthListener()
+  isAppReady.value = true
 })
 
 // Subscribe to notifications when user is authenticated

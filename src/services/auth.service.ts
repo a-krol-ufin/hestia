@@ -1,10 +1,16 @@
-import pb from './pocketbase'
+import pb, {
+  startTokenRefreshScheduler,
+  stopTokenRefreshScheduler,
+  validateSession,
+  tryRefreshToken,
+} from './pocketbase'
 import type { LoginCredentials, RegisterCredentials, AuthUser, AuthResponse, UpdateProfileData, ChangePasswordData } from '@/types/auth.types'
 
 class AuthService {
   async login(credentials: LoginCredentials): Promise<AuthResponse> {
     try {
       await pb.collection('users').authWithPassword(credentials.email, credentials.password)
+      startTokenRefreshScheduler()
       return { success: true }
     } catch (error) {
       return { success: false, error: this.parseError(error) }
@@ -26,6 +32,7 @@ class AuthService {
   }
 
   logout(): void {
+    stopTokenRefreshScheduler()
     pb.authStore.clear()
   }
 
@@ -92,6 +99,24 @@ class AuthService {
       return null
     }
     return pb.files.getURL(user, user.avatar)
+  }
+
+  /**
+   * Validate session at app start and start the refresh scheduler if valid
+   */
+  async validateAndRefresh(): Promise<boolean> {
+    const isValid = await validateSession()
+    if (isValid) {
+      startTokenRefreshScheduler()
+    }
+    return isValid
+  }
+
+  /**
+   * Force refresh the token
+   */
+  async refreshToken(): Promise<boolean> {
+    return tryRefreshToken()
   }
 
   private parseError(error: unknown): string {
